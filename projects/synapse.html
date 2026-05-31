@@ -193,18 +193,24 @@
     .step { padding: 18px; }
     .step-num { color: var(--accent); font-size: 12px; margin-bottom: 12px; }
     .video-frame {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
       border: 1px solid var(--line-strong);
       border-radius: var(--radius);
       background: #101211;
       box-shadow: var(--shadow);
       overflow: hidden;
     }
-    video, .video-frame iframe {
-      display: block;
+    .video-frame video,
+    .video-frame iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: 100%;
       border: 0;
-      background: #101211;
+      display: block;
     }
     .cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 68px 0; }
     .btn {
