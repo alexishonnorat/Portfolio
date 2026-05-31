@@ -1290,6 +1290,7 @@
       if (kind === "lang" && value !== prevLang) {
         els.terminalOutput.innerHTML = "";
         print(`<span class="ok">${state.lang === "fr" ? "portfolio prêt" : "portfolio ready"}</span>`);
+        print(helpText());
       }
       if (source === "terminal") {
         print(`<span class="ok">updated</span> ${kind}: ${value}`);
@@ -1322,8 +1323,7 @@ contact
 cv
 lang fr | lang en
 theme light | theme dark
-clear
-<span class="quiet">... quelle est la réponse à la vie, l'univers et tout le reste ?</span>`;
+clear`;
       }
       return `<span class="info">commands</span>
 help
@@ -1334,8 +1334,7 @@ contact
 resume
 lang fr | lang en
 theme light | theme dark
-clear
-<span class="quiet">... what is the answer to life, the universe and everything?</span>`;
+clear`;
     }
 
     function listProjects() {
@@ -1361,7 +1360,11 @@ stack: ${project.tags.join(" · ")}`;
       if (!cmd) return;
       print(`<span class="cmd">&gt; ${escapeHtml(raw)}</span>`);
 
-      if (cmd === "help" || cmd === "aide") return print(helpText());
+      if (cmd === "help" || cmd === "aide") return print(
+        state.lang === "fr"
+          ? `<span class="quiet">... quelle est la réponse à la vie, l'univers et tout le reste ?</span>`
+          : `<span class="quiet">... what is the answer to life, the universe and everything?</span>`
+      );
       if (cmd === "clear" || cmd === "cls") {
         els.terminalOutput.innerHTML = "";
         return;
@@ -1433,6 +1436,7 @@ stack: ${project.tags.join(" · ")}`;
 
     renderAll();
     print(`<span class="ok">${state.lang === "fr" ? "portfolio prêt" : "portfolio ready"}</span>`);
+    print(helpText());
   </script>
 </body>
 </html>
