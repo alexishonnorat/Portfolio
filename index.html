@@ -1,189 +1,305 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Portfolio de [Ton Nom] - Développeur Web">
-    <title>Portfolio - [Ton Nom]</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Alexis Honnorat — Cognitive science, data and AI for better decisions.">
+  <title>Alexis Honnorat | Entry</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --ink: #141616;
+      --muted: #676a64;
+      --quiet: #92968c;
+      --line: #d8d7cf;
+      --line-strong: #bdbbb2;
+      --green: #0f8f5f;
+      --orange: #d95f18;
+      --terminal: #300a24;
+      --terminal-head: #3b3b3b;
+      --terminal-text: #f5f2f4;
+      --terminal-muted: #c3b9c0;
+      --terminal-green: #8ae234;
+      --terminal-yellow: #fce94f;
+      --shadow: 0 28px 80px rgba(27, 31, 35, .12);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--orange) 8%, transparent), transparent 34%),
+        linear-gradient(315deg, color-mix(in srgb, var(--green) 7%, transparent), transparent 42%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      padding: 28px;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .25;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .entry {
+      position: relative;
+      z-index: 1;
+      width: min(760px, 100%);
+      display: grid;
+      gap: 24px;
+    }
+
+    .terminal {
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--terminal);
+      box-shadow: var(--shadow);
+    }
+
+    .terminal-head {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 13px;
+      background: linear-gradient(#4a4a4a, var(--terminal-head));
+      border-bottom: 1px solid #1f0718;
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dots span:nth-child(1) { background: #ff5f57; }
+    .dots span:nth-child(2) { background: #ffbd2e; }
+    .dots span:nth-child(3) { background: #28c840; }
+
+    .terminal-title {
+      color: #f4f4f4;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .terminal-body {
+      min-height: 330px;
+      padding: clamp(22px, 5vw, 42px);
+      font-family: var(--mono);
+      color: var(--terminal-text);
+    }
+
+    .line {
+      min-height: 1.75em;
+      font-size: clamp(14px, 2vw, 17px);
+      line-height: 1.75;
+      white-space: pre-wrap;
+    }
+
+    .prompt {
+      color: var(--terminal-green);
+    }
+
+    .typed-name {
+      margin-top: 26px;
+      font-family: var(--serif);
+      font-size: clamp(48px, 9vw, 86px);
+      line-height: .95;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    .typed-subtitle {
+      max-width: 620px;
+      margin-top: 18px;
+      color: var(--terminal-muted);
+      font-size: clamp(15px, 2.2vw, 19px);
+      line-height: 1.7;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: .6em;
+      height: 1.15em;
+      margin-left: 4px;
+      vertical-align: -3px;
+      background: var(--terminal-yellow);
+      animation: blink .9s steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    .links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .links a {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 15px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .links a:hover {
+      transform: translateY(-1px);
+      color: var(--ink);
+      border-color: var(--line-strong);
+      background: var(--surface);
+    }
+
+    .enter {
+      justify-self: center;
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      padding: 0 22px;
+      background: var(--ink);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 13px;
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .enter:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(20, 22, 22, .16);
+    }
+
+    .enter span {
+      color: color-mix(in srgb, var(--bg) 72%, transparent);
+    }
+
+    .caption {
+      margin: 0;
+      color: var(--quiet);
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    @media (max-width: 560px) {
+      body {
+        padding: 16px;
+      }
+
+      .terminal-body {
+        min-height: 360px;
+      }
+
+      .typed-name {
+        font-size: clamp(44px, 15vw, 68px);
+      }
+
+      .enter {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">Portfolio</div>
-            <ul class="nav-links">
-                <li><a href="#accueil">Accueil</a></li>
-                <li><a href="#apropos">À propos</a></li>
-                <li><a href="#competences">Compétences</a></li>
-                <li><a href="#projets">Projets</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </div>
+  <main class="entry" aria-label="Portfolio entry">
+    <section class="terminal" aria-label="Opening terminal">
+      <div class="terminal-head">
+        <div class="dots" aria-hidden="true"><span></span><span></span><span></span></div>
+        <span class="terminal-title">alexis@portfolio:~</span>
+      </div>
+      <div class="terminal-body" aria-live="polite">
+        <div class="line"><span class="prompt">alexis@portfolio:~$</span> <span id="typedCommand"></span><span class="cursor" id="commandCursor"></span></div>
+        <div class="typed-name" id="typedName"></div>
+        <div class="typed-subtitle" id="typedSubtitle"></div>
+      </div>
+    </section>
+
+    <nav class="links" aria-label="Profile links">
+      <a href="https://github.com/alexishonnorat" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/alexis-honnorat-516aa8214" target="_blank" rel="noopener">LinkedIn</a>
     </nav>
 
-    <!-- Section Hero -->
-    <section id="accueil" class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Bonjour, je suis <span class="highlight">[Ton Nom]</span></h1>
-            <p class="hero-subtitle">Développeur Web Full Stack</p>
-            <p class="hero-description">Je crée des expériences web modernes et performantes</p>
-            <div class="hero-buttons">
-                <a href="#projets" class="btn btn-primary">Voir mes projets</a>
-                <a href="#contact" class="btn btn-secondary">Me contacter</a>
-            </div>
-        </div>
-    </section>
+    <a class="enter" href="workstation_codex.html">Open Data Workstation <span>↵</span></a>
+    <p class="caption">Cognitive science × data products × applied AI</p>
+  </main>
 
-    <!-- Section À propos -->
-    <section id="apropos" class="about">
-        <div class="container">
-            <h2 class="section-title">À propos de moi</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>Passionné par le développement web depuis plusieurs années, je transforme des idées en applications web élégantes et fonctionnelles.</p>
-                    <p>Mon approche combine créativité, rigueur technique et souci du détail pour créer des solutions qui répondent aux besoins des utilisateurs.</p>
-                    <p>Toujours en quête de nouveaux défis, j'aime apprendre et expérimenter avec les dernières technologies.</p>
-                </div>
-                <div class="about-image">
-                    <div class="image-placeholder">
-                        <span>📸</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <script>
+    const steps = [
+      { el: "typedCommand", text: "boot data-workstation", speed: 38, delay: 250 },
+      { el: "typedName", text: "Alexis\nHonnorat", speed: 34, delay: 260 },
+      { el: "typedSubtitle", text: "Cognitive science, data and AI for better decisions.", speed: 24, delay: 240 }
+    ];
 
-    <!-- Section Compétences -->
-    <section id="competences" class="skills">
-        <div class="container">
-            <h2 class="section-title">Mes compétences</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon">💻</div>
-                    <h3>Frontend</h3>
-                    <ul>
-                        <li>HTML5 / CSS3</li>
-                        <li>JavaScript / TypeScript</li>
-                        <li>React / Vue.js</li>
-                        <li>Responsive Design</li>
-                    </ul>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">⚙️</div>
-                    <h3>Backend</h3>
-                    <ul>
-                        <li>Node.js / Express</li>
-                        <li>Python / Django</li>
-                        <li>APIs RESTful</li>
-                        <li>Bases de données</li>
-                    </ul>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🛠️</div>
-                    <h3>Outils</h3>
-                    <ul>
-                        <li>Git / GitHub</li>
-                        <li>VS Code</li>
-                        <li>Figma</li>
-                        <li>Docker</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
+    function typeInto(target, text, speed) {
+      return new Promise((resolve) => {
+        let i = 0;
+        const timer = setInterval(() => {
+          target.textContent = text.slice(0, i);
+          i += 1;
+          if (i > text.length) {
+            clearInterval(timer);
+            resolve();
+          }
+        }, speed);
+      });
+    }
 
-    <!-- Section Projets -->
-    <section id="projets" class="projects">
-        <div class="container">
-            <h2 class="section-title">Mes projets</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">🌐</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Nom du Projet 1</h3>
-                        <p>Description courte du projet et des technologies utilisées.</p>
-                        <div class="project-tags">
-                            <span class="tag">React</span>
-                            <span class="tag">Node.js</span>
-                        </div>
-                        <a href="#" class="project-link">Voir le projet →</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">📱</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Nom du Projet 2</h3>
-                        <p>Description courte du projet et des technologies utilisées.</p>
-                        <div class="project-tags">
-                            <span class="tag">Vue.js</span>
-                            <span class="tag">Firebase</span>
-                        </div>
-                        <a href="#" class="project-link">Voir le projet →</a>
-                    </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="project-placeholder">🎨</div>
-                    </div>
-                    <div class="project-content">
-                        <h3>Nom du Projet 3</h3>
-                        <p>Description courte du projet et des technologies utilisées.</p>
-                        <div class="project-tags">
-                            <span class="tag">HTML/CSS</span>
-                            <span class="tag">JavaScript</span>
-                        </div>
-                        <a href="#" class="project-link">Voir le projet →</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    async function runIntro() {
+      for (const step of steps) {
+        await new Promise((resolve) => setTimeout(resolve, step.delay));
+        await typeInto(document.getElementById(step.el), step.text, step.speed);
+      }
+      document.getElementById("commandCursor").style.display = "none";
+    }
 
-    <!-- Section Contact -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <h2 class="section-title">Contactez-moi</h2>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>Restons en contact</h3>
-                    <p>N'hésitez pas à me contacter pour discuter de vos projets ou opportunités.</p>
-                    <div class="contact-details">
-                        <div class="contact-item">
-                            <span class="contact-icon">📧</span>
-                            <a href="mailto:ton@email.com">ton@email.com</a>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-icon">💼</span>
-                            <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-                        </div>
-                        <div class="contact-item">
-                            <span class="contact-icon">🐙</span>
-                            <a href="https://github.com" target="_blank">GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <form class="contact-form">
-                    <input type="text" placeholder="Votre nom" required>
-                    <input type="email" placeholder="Votre email" required>
-                    <textarea placeholder="Votre message" rows="5" required></textarea>
-                    <button type="submit" class="btn btn-primary">Envoyer</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 [Ton Nom]. Tous droits réservés.</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+    runIntro();
+  </script>
 </body>
 </html>

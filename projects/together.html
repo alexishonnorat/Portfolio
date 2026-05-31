@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Together — application mobile-first pour organiser des sorties entre amis par Alexis Honnorat.">
+  <title>Together — Alexis Honnorat</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --ink: #141616;
+      --muted: #676a64;
+      --quiet: #92968c;
+      --line: #d8d7cf;
+      --line-strong: #bdbbb2;
+      --accent: #0284c7;
+      --green: #0f8f5f;
+      --violet: #7c3aed;
+      --shadow: 0 24px 70px rgba(27, 31, 35, .10);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 36%),
+        linear-gradient(315deg, color-mix(in srgb, var(--violet) 6%, transparent), transparent 44%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .25;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 74%);
+    }
+    a { color: inherit; text-decoration: none; }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 14px max(20px, calc((100vw - 1180px) / 2));
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+    .back, .nav-links a, .eyebrow, .meta, .step-num, .btn, footer { font-family: var(--mono); }
+    .back { color: var(--muted); font-size: 13px; transition: color .18s ease; }
+    .back:hover { color: var(--accent); }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-links a {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 12px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      font-size: 12px;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+    }
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, .72fr);
+      gap: 26px;
+      align-items: center;
+      padding: 74px 0 52px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 13%, transparent);
+    }
+    h1 {
+      margin: 0;
+      max-width: 840px;
+      font-family: var(--serif);
+      font-size: clamp(54px, 8vw, 102px);
+      line-height: .94;
+      font-weight: 400;
+    }
+    .lead {
+      max-width: 760px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+    .hero-card, .panel, .step {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface) 86%, transparent);
+    }
+    .hero-card { box-shadow: var(--shadow); padding: 22px; }
+    .hero-card h2 { margin: 0 0 14px; font-size: 18px; }
+    .meta-list { display: grid; gap: 10px; }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .meta:last-child { border-bottom: 0; }
+    .meta span:last-child { color: var(--ink); text-align: right; }
+    .section { padding: 68px 0 0; border-top: 1px solid var(--line); }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .section h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1;
+      font-weight: 400;
+    }
+    .section-note {
+      max-width: 500px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .panel { padding: 22px; }
+    .panel h3, .step h3 { margin: 0 0 12px; font-size: 18px; }
+    .panel p, .panel li, .step p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .panel p, .step p { margin: 0; }
+    .panel ul { margin: 0; padding-left: 18px; }
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .step { padding: 18px; }
+    .step-num { color: var(--accent); font-size: 12px; margin-bottom: 12px; }
+    .cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 68px 0; }
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 0 16px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+      padding: 20px 0;
+      color: var(--quiet);
+      font-size: 11px;
+    }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+    }
+    .stat-value {
+      display: block;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+    .stat-label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .tech-table {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .tech-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+    }
+    .tech-row:last-child { border-bottom: 0; }
+    .tech-key {
+      padding: 11px 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--surface) 60%, var(--bg));
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+    }
+    .tech-val {
+      padding: 11px 16px;
+      font-size: 13.5px;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    @media (max-width: 900px) {
+      nav { align-items: flex-start; }
+      .hero, .grid, .flow, .grid-2 { grid-template-columns: 1fr; }
+      .tech-row { grid-template-columns: 1fr; }
+      .tech-key { border-right: 0; border-bottom: 1px solid var(--line); }
+      .section-head { display: block; }
+      .section-note { margin-top: 14px; }
+    }
+    @media (max-width: 560px) {
+      nav { flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+      h1 { font-size: clamp(48px, 16vw, 72px); }
+      footer { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="project-controls.css">
+</head>
+<body data-project="together">
+  <nav>
+    <a href="../workstation_codex.html" class="back" data-fr="← Data Workstation" data-en="← Data Workstation">← Data Workstation</a>
+    <div class="nav-links">
+      <a href="#concept">Concept</a>
+      <a href="#features">Features</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#architecture">Architecture</a>
+    </div>
+    <div class="nav-controls">
+      <button type="button" class="nav-lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="nav-lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Mobile-first social app</div>
+        <h1>Together</h1>
+        <p class="lead">
+          A social app for organizing outings with friends, from group chat to proposal, vote, confirmation, RSVP and shared moments.
+          The product goal is to replace scattered conversations with one clear decision flow.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-value">5+</span><span class="stat-label">product flows</span></div>
+          <div class="stat"><span class="stat-value">20+</span><span class="stat-label">app routes</span></div>
+          <div class="stat"><span class="stat-value">Real-time</span><span class="stat-label">Supabase</span></div>
+          <div class="stat"><span class="stat-value">App Router</span><span class="stat-label">Next.js</span></div>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Project summary">
+        <h2>Project frame</h2>
+        <div class="meta-list">
+          <div class="meta"><span>Type</span><span>Mobile-first web app</span></div>
+          <div class="meta"><span>Core</span><span>Groups, chat, outings, feed</span></div>
+          <div class="meta"><span>Backend</span><span>Supabase Auth, Postgres, Realtime</span></div>
+          <div class="meta"><span>Deploy</span><span>Vercel-ready Next.js app</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="concept">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Concept</p>
+          <h2>One flow for every outing.</h2>
+        </div>
+        <p class="section-note">Together replaces ten message threads with a single, coherent decision flow.</p>
+      </div>
+      <div class="grid-2">
+        <article class="panel">
+          <h3>The problem</h3>
+          <p>Organizing an outing means scattered threads across three apps, half-committed answers and no single source of truth for who is actually coming. Decisions dissolve in the noise before anyone commits.</p>
+        </article>
+        <article class="panel">
+          <h3>The solution</h3>
+          <p>One place for everything: propose, vote, confirm, RSVP and remember. Designed mobile-first with a native app feel — tab navigation, stories, social feed and maps. Close to an iOS/Android experience in a web app.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">User workflow</p>
+          <h2>From idea to shared moment.</h2>
+        </div>
+        <p class="section-note">
+          Together structures the messy social process of planning an outing into a clear sequence.
+        </p>
+      </div>
+
+      <div class="flow">
+        <article class="step">
+          <div class="step-num">01</div>
+          <h3>Discuss</h3>
+          <p>Groups are the social unit. Each group has a dedicated chat where members attach proposals, vote on outings, and coordinate without leaving the thread. Realtime Supabase subscriptions keep every participant in sync as decisions evolve.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">02</div>
+          <h3>Vote</h3>
+          <p>When someone proposes an outing, the group votes before it becomes confirmed. Members compare options, approve or decline, and the system surfaces the winning proposal. The vote-to-confirmation flow prevents half-committed plans.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">03</div>
+          <h3>RSVP</h3>
+          <p>Confirmed outings collect individual attendance. Members mark themselves going, maybe or out — the organizer sees a live headcount. The group stays aligned without spawning a separate message thread for logistics.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">04</div>
+          <h3>Remember</h3>
+          <p>After the outing, Moments, a social feed and Stories transform shared experiences into persistent group memory. Photos and reactions create continuity between outings and give the app a reason to exist beyond logistics.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Features</p>
+          <h2>Everything in one place.</h2>
+        </div>
+        <p class="section-note">Six product surfaces, each solving a specific friction point in group planning.</p>
+      </div>
+
+      <div class="grid">
+        <article class="panel">
+          <h3>Groups &amp; Chat</h3>
+          <p>Realtime messages via Supabase Realtime, history persisted in PostgreSQL. Proposals and activities are attached to conversation context so plans stay connected to the discussion that produced them.</p>
+        </article>
+        <article class="panel">
+          <h3>Outing workflow</h3>
+          <p>Proposal → vote → confirmation → RSVP → moment sharing. The vote-to-confirmation step prevents half-committed plans. Everyone knows the status without asking.</p>
+        </article>
+        <article class="panel">
+          <h3>Feed &amp; Stories</h3>
+          <p>Photo posts, likes, comments and sharing. Stories transform shared experiences into persistent group memory and give the app a reason to exist between outings.</p>
+        </article>
+        <article class="panel">
+          <h3>Map &amp; Places</h3>
+          <p>Leaflet maps with restaurant, bar and activity datasets for Paris. "Open only" filter, price/person info. Pin a spot and share it directly into a group proposal without leaving the app.</p>
+        </article>
+        <article class="panel">
+          <h3>Social profiles</h3>
+          <p>Public/private accounts, follow graph, outing history. Light social discovery — the feed surfaces what friends are planning, not just groups you're already in.</p>
+        </article>
+        <article class="panel">
+          <h3>Recommendations</h3>
+          <p>AI-powered place suggestions via OpenRouter/OpenAI based on group preferences, budget filter and location. Multi-option vote to let the group choose between AI proposals.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Architecture</p>
+          <h2>Full-stack prototype.</h2>
+        </div>
+        <p class="section-note">Next.js App Router, Supabase and AI providers assembled into a mobile-first product.</p>
+      </div>
+
+      <div class="tech-table">
+        <div class="tech-row">
+          <span class="tech-key">Frontend</span>
+          <span class="tech-val">Next.js 14 App Router · TypeScript · Tailwind CSS 4</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Components</span>
+          <span class="tech-val">shadcn/ui · native dark theme · aria accessibility · Lucide icons</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Auth &amp; DB</span>
+          <span class="tech-val">Supabase — email/phone auth · PostgreSQL · RLS (Row Level Security) · Storage</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Realtime</span>
+          <span class="tech-val">Supabase Realtime — instant chat · notifications · member presence</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">AI</span>
+          <span class="tech-val">OpenRouter (primary) · OpenAI (fallback 429) — place suggestion, multi-option vote, budget filter</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">API routes</span>
+          <span class="tech-val">/api/group/[id]/recommend-place · /recommend-options · /outings · /vote · /rsvp · /feed</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Map</span>
+          <span class="tech-val">Leaflet — restaurants, bars, activities Paris · "Open only" filter · price/person · share to group</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Paris data</span>
+          <span class="tech-val">Tables resto_paris_50, bar_paris_50, activites_paris_50 — seeded via Overpass API or CSV</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Deploy</span>
+          <span class="tech-val">Vercel · CI/CD auto on push to main · Supabase + AI env vars required</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Language</span>
+          <span class="tech-val">TypeScript 93.8% · JavaScript 2.8% · CSS 1.7%</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <a href="../workstation_codex.html" class="btn" data-fr="Retour à la workstation" data-en="Back to workstation">Back to workstation</a>
+      <a href="https://github.com/alexishonnorat/Together" target="_blank" rel="noopener" class="btn" data-fr="GitHub" data-en="GitHub">GitHub</a>
+    </div>
+
+    <footer>
+      <span>Together — mobile-first social planning</span>
+      <span>Next.js · TypeScript · Supabase · Realtime</span>
+    </footer>
+  </main>
+  <script src="project-controls.js"></script>
+</body>
+</html>

@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portfolio bilingue d'Alexis Honnorat, Data Scientist et AI Engineer.">
+  <title>Alexis Honnorat | Portfolio</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --surface-2: #ecebe3;
+      --ink: #141616;
+      --muted: #676a64;
+      --quiet: #92968c;
+      --line: #d8d7cf;
+      --line-strong: #bdbbb2;
+      --blue: #2563eb;
+      --green: #0f8f5f;
+      --red: #c73a3a;
+      --violet: #7c3aed;
+      --orange: #d95f18;
+      --cyan: #0284c7;
+      --shadow: 0 24px 70px rgba(27, 31, 35, .10);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #101211;
+      --surface: #171a19;
+      --surface-2: #202421;
+      --ink: #f1f3ed;
+      --muted: #a5aaa1;
+      --quiet: #747a70;
+      --line: #30362f;
+      --line-strong: #454d43;
+      --blue: #6ea8ff;
+      --green: #72d6a5;
+      --red: #ff7777;
+      --violet: #b292ff;
+      --orange: #ff9a5c;
+      --cyan: #67d4ff;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .34);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--blue) 8%, transparent), transparent 35%),
+        linear-gradient(315deg, color-mix(in srgb, var(--green) 7%, transparent), transparent 42%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .28;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 75%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+
+    .topbar-inner {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 12px 0;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 160px;
+    }
+
+    .brand strong {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .nav a {
+      color: var(--muted);
+      border: 1px solid transparent;
+      border-radius: 999px;
+      padding: 8px 11px;
+      font-size: 13px;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+      border-color: var(--line);
+      background: color-mix(in srgb, var(--surface) 75%, transparent);
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filter {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      box-shadow: 0 1px 0 color-mix(in srgb, var(--surface) 80%, transparent) inset;
+    }
+
+    .filter-label {
+      padding: 0 7px;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    .filter button {
+      min-width: 42px;
+      height: 28px;
+      padding: 0 10px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: color .18s ease, background .18s ease;
+    }
+
+    .filter button[aria-pressed="true"] {
+      background: var(--ink);
+      color: var(--bg);
+    }
+
+    .shell {
+      position: relative;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 58px 0 70px;
+    }
+
+    .workspace-hero {
+      display: grid;
+      grid-template-columns: minmax(280px, .72fr) minmax(420px, 1fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 34px 0 10px;
+    }
+
+    .workspace-intro {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+      padding: clamp(22px, 4vw, 34px);
+      box-shadow: 0 16px 46px rgba(27, 31, 35, .07);
+    }
+
+    .workspace-kicker {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .workspace-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--green) 14%, transparent);
+    }
+
+    .workspace-title {
+      margin: 0;
+      max-width: 620px;
+      font-family: var(--serif);
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 400;
+      line-height: .98;
+    }
+
+    .workspace-copy {
+      max-width: 650px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 0 17px;
+      color: var(--ink);
+      background: color-mix(in srgb, var(--surface) 72%, transparent);
+      font-family: var(--mono);
+      font-size: 12px;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .action:hover {
+      transform: translateY(-1px);
+      border-color: var(--ink);
+      background: var(--surface);
+    }
+
+    .action.primary {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: var(--ink);
+    }
+
+    .terminal-panel {
+      align-self: center;
+      min-width: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      background: #300a24;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .terminal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 0 12px;
+      min-height: 38px;
+      border-bottom: 1px solid #1f0718;
+      background: linear-gradient(#4a4a4a, #333333);
+    }
+
+    .terminal-title {
+      color: #f4f4f4;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .terminal-status {
+      display: flex;
+      gap: 6px;
+      order: -1;
+    }
+
+    .terminal-status span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #777;
+    }
+
+    .terminal-status span:nth-child(1) { background: #ff5f57; }
+    .terminal-status span:nth-child(2) { background: #ffbd2e; }
+    .terminal-status span:nth-child(3) { background: #28c840; }
+
+    .terminal-body {
+      height: 300px;
+      overflow-y: auto;
+      padding: 18px;
+      background: #300a24;
+      color: #e8e1e5;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    .terminal-body .cmd { color: #ffffff; }
+    .terminal-body .ok { color: #8ae234; }
+    .terminal-body .info { color: #729fcf; }
+    .terminal-body .warn { color: #f57900; }
+
+    .terminal-form {
+      margin: 0 18px 18px;
+      padding: 0;
+      border: 2px solid #f57900;
+      border-radius: 8px;
+      background: #26081d;
+      box-shadow: 0 0 0 4px rgba(245, 121, 0, .14);
+      cursor: text;
+      overflow: hidden;
+      transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .terminal-form:focus-within {
+      border-color: #8ae234;
+      background: #26081d;
+      box-shadow: 0 0 0 4px rgba(138, 226, 52, .17);
+    }
+
+    .terminal-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 9px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      background: rgba(245, 121, 0, .16);
+      color: #ffd0a2;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .terminal-form:focus-within .terminal-input-label {
+      background: rgba(138, 226, 52, .12);
+      color: #c8ff95;
+    }
+
+    .terminal-input-label span:last-child {
+      color: #b8aeb5;
+      font-size: 11px;
+    }
+
+    .terminal-input-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 12px;
+      min-width: 0;
+    }
+
+    .terminal-prompt-row {
+      padding: 0 18px 10px;
+      background: #300a24;
+    }
+
+    .terminal-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: #b8aeb5;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .terminal-hint strong {
+      color: #8ae234;
+      font-weight: 700;
+    }
+
+    .command-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 0 18px 14px;
+      background: #300a24;
+    }
+
+    .command-chip {
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      padding: 6px 9px;
+      background: rgba(255,255,255,.08);
+      color: #e8e1e5;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: color .18s ease, border-color .18s ease, transform .18s ease, background .18s ease;
+    }
+
+    .command-chip:hover {
+      transform: translateY(-1px);
+      border-color: #8ae234;
+      color: #8ae234;
+      background: rgba(138, 226, 52, .10);
+    }
+
+    .prompt {
+      color: #8ae234;
+      font-family: var(--mono);
+      font-size: 14px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .terminal-form input {
+      width: 100%;
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #ffffff;
+      font-family: var(--mono);
+      font-size: 16px;
+      caret-color: #8ae234;
+    }
+
+    .terminal-form input::placeholder {
+      color: #fce94f;
+      opacity: 1;
+    }
+
+    .terminal-demo {
+      padding: 0 18px 12px;
+      background: #300a24;
+      color: #b8aeb5;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .terminal-demo span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      border: 1px solid rgba(252, 233, 79, .36);
+      border-radius: 999px;
+      padding: 0 10px;
+      background: rgba(252, 233, 79, .09);
+      color: #fce94f;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .terminal-demo span::after {
+      content: "";
+      width: 7px;
+      height: 1.1em;
+      margin-left: 5px;
+      background: #fce94f;
+      animation: blink .9s steps(2, start) infinite;
+    }
+
+    .section {
+      padding: 74px 0 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 24px;
+      border-top: 1px solid var(--line);
+      padding-top: 26px;
+    }
+
+    .eyebrow {
+      margin: 0 0 9px;
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 56px);
+      font-weight: 400;
+      line-height: 1.02;
+    }
+
+    .section-note {
+      max-width: 420px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+
+    .project {
+      min-height: 286px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .project:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--accent) 65%, var(--line));
+      box-shadow: 0 16px 40px color-mix(in srgb, var(--accent) 12%, transparent);
+    }
+
+    .project[data-accent="orange"] { --accent: var(--orange); }
+    .project[data-accent="cyan"] { --accent: var(--cyan); }
+    .project[data-accent="violet"] { --accent: var(--violet); }
+    .project[data-accent="green"] { --accent: var(--green); }
+    .project[data-accent="blue"] { --accent: var(--blue); }
+
+    .project-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .project-index {
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .project-signal {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 3px;
+      align-items: end;
+      gap: 3px;
+      height: 34px;
+    }
+
+    .project-signal span {
+      height: calc(var(--h) * 1%);
+      min-height: 5px;
+      border-radius: 999px;
+      background: var(--accent);
+      opacity: .78;
+    }
+
+    .project h3 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .project p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: auto;
+    }
+
+    .tag {
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+      border-radius: 999px;
+      padding: 5px 8px;
+      color: color-mix(in srgb, var(--accent) 82%, var(--ink));
+      background: color-mix(in srgb, var(--accent) 9%, transparent);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .project-thumb {
+      width: 100%;
+      height: 108px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      overflow: hidden;
+      background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
+    }
+
+    .project-thumb svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 192px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .about-photo {
+      position: sticky;
+      top: calc(var(--transport-h, 0px) + 16px);
+    }
+
+    .profile-photo {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      display: block;
+    }
+
+    .profile-avatar {
+      width: 100%;
+      aspect-ratio: 1;
+      background: color-mix(in srgb, var(--blue) 12%, var(--surface-2));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--serif);
+      font-size: 48px;
+      font-weight: 400;
+      color: var(--blue);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      padding: 22px;
+    }
+
+    .panel h3 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .skill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 10px;
+      background: color-mix(in srgb, var(--surface-2) 50%, transparent);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .contact {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      padding-bottom: 30px;
+    }
+
+    .contact-links {
+      display: grid;
+      gap: 8px;
+    }
+
+    .contact-links a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 0 14px;
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 13px;
+      transition: color .18s ease, border-color .18s ease, transform .18s ease;
+    }
+
+    .contact-links a:hover {
+      color: var(--ink);
+      border-color: var(--line-strong);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+      padding: 20px 0 0;
+      color: var(--quiet);
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    @media (max-width: 980px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+      }
+
+      .nav {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 2px;
+      }
+
+      .filters {
+        justify-content: flex-start;
+      }
+
+      .workspace-hero {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+
+      .workspace-intro {
+        min-height: 0;
+      }
+
+      .project-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .about-photo {
+        position: static;
+        display: flex;
+        justify-content: center;
+      }
+
+      .profile-photo,
+      .profile-avatar {
+        max-width: 160px;
+      }
+
+      .about-grid,
+      .contact {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      .shell {
+        width: min(100% - 24px, 1180px);
+        padding-top: 36px;
+      }
+
+      .filter {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .filter button {
+        flex: 1;
+      }
+
+      .workspace-title {
+        font-size: clamp(45px, 17vw, 72px);
+      }
+
+      .project-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .section-note {
+        margin-top: 14px;
+      }
+
+      footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body data-lang="fr" data-theme="light">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#top" aria-label="Alexis Honnorat">
+        <strong>Alexis Honnorat</strong>
+        <span id="brandRole">Data & AI</span>
+      </a>
+
+      <nav class="nav" aria-label="Navigation principale">
+        <a href="#projects" data-i18n="navProjects">Projets</a>
+        <a href="#about" data-i18n="navAbout">Profil</a>
+        <a href="#skills" data-i18n="navSkills">Compétences</a>
+        <a href="#contact" data-i18n="navContact">Contact</a>
+      </nav>
+
+      <div class="filters" aria-label="Filtres du portfolio">
+        <div class="filter" data-control="lang">
+          <span class="filter-label" data-i18n="filterLang">Langue</span>
+          <button type="button" data-set-lang="fr" aria-pressed="true">FR</button>
+          <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <div class="filter" data-control="theme">
+          <span class="filter-label" data-i18n="filterTheme">Mode</span>
+          <button type="button" data-set-theme="light" aria-pressed="true">Light</button>
+          <button type="button" data-set-theme="dark" aria-pressed="false">Dark</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell" id="top">
+    <section class="workspace-hero" aria-labelledby="workspaceTitle">
+      <div class="workspace-intro">
+        <div class="workspace-kicker" aria-live="polite">
+          <span class="workspace-dot"></span>
+          <span id="workspaceStatus">Data workstation ready</span>
+        </div>
+
+        <h1 class="workspace-title" id="workspaceTitle">Explore the workbench.</h1>
+        <p class="workspace-copy" id="workspaceCopy">
+          Projets, compétences et méthode de travail, avec une lecture RH ou technique selon ce que vous voulez évaluer.
+        </p>
+
+        <div class="actions">
+          <a class="action primary" href="#projects" data-i18n="ctaProjects">Voir les projets</a>
+          <a class="action" href="mailto:alexishonnorat@gmail.com" data-i18n="ctaContact">Me contacter</a>
+        </div>
+      </div>
+
+      <aside class="terminal-panel" aria-label="Terminal interactif">
+        <div class="terminal-head">
+          <span class="terminal-title">alexis@portfolio:~</span>
+          <div class="terminal-status" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+        <div class="terminal-body" id="terminalOutput"></div>
+        <div class="terminal-prompt-row">
+          <div class="terminal-hint">
+          <span id="terminalHint"><strong>Terminal</strong> — commandes rapides ou saisie libre.</span>
+          </div>
+        </div>
+        <div class="command-chips" aria-label="Commandes rapides">
+          <button class="command-chip" type="button" data-command="projects">projects</button>
+          <button class="command-chip" type="button" data-command="open mirakl">open mirakl</button>
+          <button class="command-chip" type="button" data-command="open fbi">open fbi</button>
+          <button class="command-chip" type="button" data-command="skills">skills</button>
+        </div>
+        <div class="terminal-demo">
+          <span id="terminalDemoLabel">Exemple :</span>
+          <span id="terminalDemoText">open fbi</span>
+        </div>
+        <form class="terminal-form" id="terminalForm" autocomplete="off">
+          <div class="terminal-input-label">
+            <span id="terminalInputLabel">Cliquez ici puis écrivez une commande</span>
+            <span id="terminalInputHelp">Entrée pour valider</span>
+          </div>
+          <div class="terminal-input-row">
+            <span class="prompt" id="prompt">alexis@portfolio:~$</span>
+            <input id="terminalInput" type="text" spellcheck="false" aria-label="Commande terminal" placeholder="help, projects, open fbi...">
+          </div>
+        </form>
+      </aside>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="projectsEyebrow">selected work</p>
+          <h2 data-i18n="projectsTitle">Projets</h2>
+        </div>
+        <p class="section-note" id="projectsNote">
+          Une première intégration sobre. Les cartes pourront ensuite devenir des pages projet détaillées.
+        </p>
+      </div>
+
+      <div class="project-grid" id="projectGrid"></div>
+    </section>
+
+    <section class="section" id="about">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="aboutEyebrow">profile</p>
+          <h2 data-i18n="aboutTitle">Profil</h2>
+        </div>
+        <p class="section-note" id="aboutNote" data-i18n="aboutNote">
+          Un parcours entre data, IA appliquée et interfaces utiles pour transformer l'analyse en usage concret.
+        </p>
+      </div>
+
+      <div class="about-layout">
+        <div class="about-photo">
+          <img class="profile-photo" src="assets/images/profile.jpg" alt="Alexis Honnorat"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+          <div class="profile-avatar" style="display:none" aria-hidden="true">AH</div>
+        </div>
+        <div class="about-grid">
+          <article class="panel">
+            <h3 id="aboutPanelTitle">Ce que je construis</h3>
+            <p id="aboutPanelText">
+              Des pipelines, assistants IA et tableaux de bord pensés pour rendre les données exploitables dans de vrais contextes métier.
+            </p>
+          </article>
+          <article class="panel">
+            <h3 id="terminalPanelTitle">Comment je travaille</h3>
+            <p id="terminalPanelText">
+              Je pars du problème utilisateur, je structure la donnée, puis je construis l'interface ou l'automatisation qui rend la décision plus simple.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="skillsEyebrow">stack</p>
+          <h2 data-i18n="skillsTitle">Compétences</h2>
+        </div>
+        <p class="section-note" id="skillsNote">
+          Un socle data, IA et produit, avec un goût pour les outils qui transforment une analyse en usage réel.
+        </p>
+      </div>
+      <div class="panel">
+        <div class="skill-list" id="skillList"></div>
+      </div>
+    </section>
+
+    <section class="section contact" id="contact">
+      <div class="panel">
+        <p class="eyebrow" data-i18n="contactEyebrow">contact</p>
+        <h2 data-i18n="contactTitle">On travaille ensemble ?</h2>
+        <p id="contactText">
+          Disponible pour échanger autour de data products, IA appliquée, automatisation et analytics.
+        </p>
+      </div>
+      <div class="contact-links">
+        <a href="mailto:alexishonnorat@gmail.com">Email <span>alexishonnorat@gmail.com</span></a>
+        <a href="https://github.com/alexishonnorat" target="_blank" rel="noopener">GitHub <span>open</span></a>
+        <a href="https://www.linkedin.com/in/alexis-honnorat-516aa8214" target="_blank" rel="noopener">LinkedIn <span>open</span></a>
+        <a href="CV_ALEXIS_HONNORAT.pdf" target="_blank">CV <span>pdf</span></a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Alexis Honnorat</span>
+      <span id="footerMode">RH · FR · Light</span>
+    </footer>
+  </main>
+
+  <script>
+    const content = {
+      fr: {
+        status: "Data workstation prête",
+        workspaceTitle: "Explorer le workbench.",
+        workspaceCopy: "Projets, compétences et méthode de travail — data engineering, IA appliquée et interfaces décisionnelles.",
+        projectsNote: "Une sélection de projets avec impact, rôle et stack technique.",
+        aboutTitle: "Ce que je construis",
+        aboutText: "Des pipelines data, assistants IA et tableaux de bord pensés pour rendre l'information compréhensible et actionnable dans de vrais contextes métier.",
+        terminalTitle: "Comment je travaille",
+        terminalText: "Ma formation en sciences cognitives nourrit ma méthode : comprendre les usages, stabiliser la donnée, puis construire une interface ou un système IA qui rend la décision plus simple.",
+        skillsNote: "Stack data, IA et produit — de l'extraction à l'interface.",
+        contactText: "Disponible pour échanger autour de data products, IA appliquée, automatisation et analytics.",
+        skills: ["Sciences cognitives", "Python", "Pandas", "SQL", "FastAPI", "LangChain", "OpenAI API", "FAISS", "BM25", "Supabase", "Next.js", "TypeScript", "Plotly", "BigQuery", "GCP", "Data storytelling", "Product thinking"],
+        navProjects: "Projets",
+        navAbout: "Profil",
+        navSkills: "Compétences",
+        navContact: "Contact",
+        filterLang: "Langue",
+        filterTheme: "Mode",
+        ctaProjects: "Voir les projets",
+
+        ctaContact: "Me contacter",
+        terminalHint: "<strong>Terminal</strong> — commandes rapides ou saisie libre.",
+        terminalPlaceholder: "vous pouvez écrire ici : help, projects, open fbi...",
+        terminalDemoLabel: "Exemple :",
+        terminalDemoText: "open fbi",
+        terminalInputLabel: "Cliquez ici puis écrivez une commande",
+        terminalInputHelp: "Entrée pour valider",
+        projectsEyebrow: "selected work",
+        projectsTitle: "Projets",
+        aboutEyebrow: "profile",
+        aboutTitle: "Profil",
+        aboutNote: "Un parcours entre data, IA appliquée et interfaces utiles pour transformer l'analyse en usage concret.",
+        skillsEyebrow: "stack",
+        skillsTitle: "Compétences",
+        contactEyebrow: "contact",
+        contactTitle: "On travaille ensemble ?"
+      },
+      en: {
+        status: "Data workstation ready",
+        workspaceTitle: "Explore the workbench.",
+        workspaceCopy: "Projects, skills and working method — data engineering, applied AI and decision interfaces.",
+        projectsNote: "A selection of projects with impact, role and tech stack.",
+        aboutTitle: "What I Build",
+        aboutText: "Data pipelines, AI assistants and dashboards designed to make information understandable and actionable in real-world business contexts.",
+        terminalTitle: "How I Work",
+        terminalText: "My cognitive science background shapes my method: understand usage, stabilise data, then build an interface or AI system that makes decisions simpler.",
+        skillsNote: "Data, AI and product stack — from extraction to interface.",
+        contactText: "Open to conversations about data products, applied AI, automation and analytics.",
+        skills: ["Cognitive science", "Python", "Pandas", "SQL", "FastAPI", "LangChain", "OpenAI API", "FAISS", "BM25", "Supabase", "Next.js", "TypeScript", "Plotly", "BigQuery", "GCP", "Data storytelling", "Product thinking"],
+        navProjects: "Projects",
+        navAbout: "Profile",
+        navSkills: "Skills",
+        navContact: "Contact",
+        filterLang: "Language",
+        filterTheme: "Mode",
+        ctaProjects: "View projects",
+
+        ctaContact: "Contact me",
+        terminalHint: "<strong>Terminal</strong> — shortcuts or free input.",
+        terminalPlaceholder: "you can type here: help, projects, open fbi...",
+        terminalDemoLabel: "Example:",
+        terminalDemoText: "open fbi",
+        terminalInputLabel: "Click here, then type a command",
+        terminalInputHelp: "Press Enter to run",
+        projectsEyebrow: "selected work",
+        projectsTitle: "Projects",
+        aboutEyebrow: "profile",
+        aboutTitle: "Profile",
+        aboutNote: "A path across data, applied AI and useful interfaces that turn analysis into concrete usage.",
+        skillsEyebrow: "stack",
+        skillsTitle: "Skills",
+        contactEyebrow: "contact",
+        contactTitle: "Let's work together?"
+      }
+    };
+
+    const projects = [
+      {
+        id: "mirakl",
+        accent: "blue",
+        title: "Hackathon Mirakl",
+        link: "projects/mirakl.html",
+        fr: "Prototype Supply Brain pour Mirakl Connect : priorisation stock, interface intent-driven et agents IA orchestrés.",
+        en: "Supply Brain prototype for Mirakl Connect: stock prioritization, intent-driven interface and orchestrated AI agents.",
+        tags: ["Product", "AI UX", "Supply", "CSRD"],
+        thumb: `<svg viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" fill="none"><defs><linearGradient id="g-mirakl" x1="0" y1="0" x2="200" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1a3566"/><stop offset="100%" stop-color="#0a1a3a"/></linearGradient></defs><rect width="200" height="108" fill="url(#g-mirakl)"/><circle cx="100" cy="54" r="14" fill="rgba(100,160,255,.18)" stroke="rgba(100,160,255,.85)" stroke-width="2"/><circle cx="100" cy="54" r="5" fill="rgba(100,160,255,.7)"/><line x1="100" y1="40" x2="100" y2="18" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><line x1="100" y1="68" x2="100" y2="90" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><line x1="88" y1="47" x2="66" y2="28" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><line x1="112" y1="47" x2="134" y2="28" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><line x1="88" y1="61" x2="66" y2="80" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><line x1="112" y1="61" x2="134" y2="80" stroke="rgba(100,160,255,.45)" stroke-width="1.5"/><circle cx="100" cy="14" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><circle cx="100" cy="94" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><circle cx="61" cy="23" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><circle cx="139" cy="23" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><circle cx="61" cy="85" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><circle cx="139" cy="85" r="7" fill="rgba(100,160,255,.15)" stroke="rgba(100,160,255,.6)" stroke-width="1.5"/><rect x="8" y="8" width="76" height="20" rx="10" fill="rgba(0,0,0,.55)" stroke="rgba(100,160,255,.35)" stroke-width="1"/><line x1="17" y1="9" x2="14" y2="15" stroke="rgba(255,215,0,.85)" stroke-width="1.5" stroke-linecap="round"/><line x1="21" y1="9" x2="24" y2="15" stroke="rgba(255,215,0,.85)" stroke-width="1.5" stroke-linecap="round"/><circle cx="19" cy="20" r="5" fill="rgba(255,215,0,.22)" stroke="rgba(255,215,0,.9)" stroke-width="1.5"/><text x="29" y="22" font-family="ui-monospace,monospace" font-size="9.5" fill="rgba(255,255,255,.9)" letter-spacing=".3">Finaliste</text></svg>`
+      },
+      {
+        id: "fbi",
+        accent: "orange",
+        title: "FBI Criminal Profiler",
+        link: "projects/fbi.html",
+        fr: "Pipeline d'extraction et d'analyse de 439 profils de fugitifs, avec visualisations interactives et assistant IA.",
+        en: "Extraction and analysis pipeline for 439 fugitive profiles, with interactive visualizations and AI assistant.",
+        tags: ["Python", "Data viz", "LangChain", "Scraping"],
+        thumb: `<svg viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" fill="none"><defs><linearGradient id="g-fbi" x1="0" y1="0" x2="200" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#4a2006"/><stop offset="100%" stop-color="#1e0d02"/></linearGradient></defs><rect width="200" height="108" fill="url(#g-fbi)"/><rect x="34" y="64" width="60" height="10" rx="5" fill="rgba(255,150,50,.15)" stroke="rgba(255,150,50,.7)" stroke-width="2"/><rect x="44" y="28" width="40" height="38" rx="3" fill="rgba(255,150,50,.1)" stroke="rgba(255,150,50,.7)" stroke-width="2"/><line x1="44" y1="28" x2="84" y2="28" stroke="rgba(255,150,50,.7)" stroke-width="2"/><rect x="44" y="52" width="40" height="8" fill="rgba(255,150,50,.2)" stroke="none"/><line x1="44" y1="52" x2="84" y2="52" stroke="rgba(255,150,50,.45)" stroke-width="1"/><line x1="44" y1="60" x2="84" y2="60" stroke="rgba(255,150,50,.45)" stroke-width="1"/><circle cx="145" cy="52" r="23" fill="rgba(255,150,50,.08)" stroke="rgba(255,150,50,.75)" stroke-width="2.5"/><line x1="161" y1="68" x2="175" y2="83" stroke="rgba(255,150,50,.75)" stroke-width="3.5" stroke-linecap="round"/><path d="M136 46 Q145 38 154 46" stroke="rgba(255,150,50,.35)" stroke-width="1.5" stroke-linecap="round"/><path d="M135 54 Q145 46 155 54" stroke="rgba(255,150,50,.35)" stroke-width="1.5" stroke-linecap="round"/><path d="M136 62 Q145 54 154 62" stroke="rgba(255,150,50,.35)" stroke-width="1.5" stroke-linecap="round"/></svg>`
+      },
+      {
+        id: "synapse",
+        accent: "violet",
+        title: "Synapse",
+        link: "projects/synapse.html",
+        fr: "Assistant IA pour interroger des thèses et documents académiques avec réponses sourcées.",
+        en: "AI assistant to query theses and academic documents with source-backed answers.",
+        tags: ["RAG", "FAISS", "FastAPI", "BM25"],
+        thumb: `<svg viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" fill="none"><defs><linearGradient id="g-synapse" x1="0" y1="0" x2="200" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#2a1260"/><stop offset="100%" stop-color="#110832"/></linearGradient></defs><rect width="200" height="108" fill="url(#g-synapse)"/><rect x="24" y="28" width="46" height="58" rx="4" fill="rgba(150,80,255,.08)" stroke="rgba(150,80,255,.38)" stroke-width="1.5"/><rect x="18" y="22" width="46" height="58" rx="4" fill="rgba(150,80,255,.12)" stroke="rgba(150,80,255,.6)" stroke-width="1.5"/><line x1="28" y1="38" x2="54" y2="38" stroke="rgba(150,80,255,.5)" stroke-width="1.5"/><line x1="28" y1="47" x2="54" y2="47" stroke="rgba(150,80,255,.5)" stroke-width="1.5"/><line x1="28" y1="56" x2="46" y2="56" stroke="rgba(150,80,255,.5)" stroke-width="1.5"/><line x1="74" y1="54" x2="106" y2="54" stroke="rgba(150,80,255,.7)" stroke-width="2" stroke-linecap="round"/><polyline points="100,47 108,54 100,61" stroke="rgba(150,80,255,.7)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="128" cy="28" r="8" fill="rgba(150,80,255,.18)" stroke="rgba(150,80,255,.7)" stroke-width="1.5"/><circle cx="128" cy="54" r="8" fill="rgba(150,80,255,.18)" stroke="rgba(150,80,255,.7)" stroke-width="1.5"/><circle cx="128" cy="80" r="8" fill="rgba(150,80,255,.18)" stroke="rgba(150,80,255,.7)" stroke-width="1.5"/><circle cx="163" cy="41" r="8" fill="rgba(150,80,255,.18)" stroke="rgba(150,80,255,.7)" stroke-width="1.5"/><circle cx="163" cy="67" r="8" fill="rgba(150,80,255,.18)" stroke="rgba(150,80,255,.7)" stroke-width="1.5"/><line x1="136" y1="31" x2="155" y2="41" stroke="rgba(150,80,255,.3)" stroke-width="1"/><line x1="136" y1="51" x2="155" y2="43" stroke="rgba(150,80,255,.3)" stroke-width="1"/><line x1="136" y1="57" x2="155" y2="65" stroke="rgba(150,80,255,.3)" stroke-width="1"/><line x1="136" y1="77" x2="155" y2="69" stroke="rgba(150,80,255,.3)" stroke-width="1"/></svg>`
+      },
+      {
+        id: "together",
+        accent: "cyan",
+        title: "Together",
+        link: "projects/together.html",
+        fr: "Application mobile-first pour organiser des sorties entre amis avec vote, RSVP, carte et recommandations.",
+        en: "Mobile-first app to organize outings with friends through voting, RSVP, maps and recommendations.",
+        tags: ["Next.js", "Supabase", "Realtime"],
+        thumb: `<svg viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" fill="none"><defs><linearGradient id="g-together" x1="0" y1="0" x2="200" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#063650"/><stop offset="100%" stop-color="#021c2a"/></linearGradient></defs><rect width="200" height="108" fill="url(#g-together)"/><rect x="14" y="16" width="96" height="54" rx="10" fill="rgba(0,190,220,.1)" stroke="rgba(0,190,220,.65)" stroke-width="2"/><polygon points="30,70 18,86 50,70" fill="rgba(0,190,220,.1)" stroke="rgba(0,190,220,.65)" stroke-width="2" stroke-linejoin="round"/><circle cx="44" cy="43" r="5" fill="rgba(0,190,220,.55)"/><circle cx="62" cy="43" r="5" fill="rgba(0,190,220,.55)"/><circle cx="80" cy="43" r="5" fill="rgba(0,190,220,.55)"/><rect x="108" y="40" width="76" height="46" rx="8" fill="rgba(0,190,220,.08)" stroke="rgba(0,190,220,.45)" stroke-width="1.5"/><polygon points="112,40 126,40 119,30" fill="rgba(0,190,220,.08)" stroke="rgba(0,190,220,.45)" stroke-width="1.5" stroke-linejoin="round"/><line x1="120" y1="57" x2="172" y2="57" stroke="rgba(0,190,220,.4)" stroke-width="1.5"/><line x1="120" y1="67" x2="158" y2="67" stroke="rgba(0,190,220,.4)" stroke-width="1.5"/></svg>`
+      },
+      {
+        id: "payfit",
+        accent: "green",
+        title: "Hackathon Payfit",
+        link: "projects/payfit.html",
+        fr: "Projet hackathon autour de l'analyse de contenu, veille concurrentielle et opportunités SEO/GEO.",
+        en: "Hackathon project around content analysis, competitive monitoring and SEO/GEO opportunities.",
+        tags: ["Python", "Scraping", "SEO"],
+        thumb: `<svg viewBox="0 0 200 108" xmlns="http://www.w3.org/2000/svg" fill="none"><defs><linearGradient id="g-payfit" x1="0" y1="0" x2="200" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#0a3d28"/><stop offset="100%" stop-color="#041c12"/></linearGradient></defs><rect width="200" height="108" fill="url(#g-payfit)"/><line x1="22" y1="82" x2="102" y2="82" stroke="rgba(0,190,100,.35)" stroke-width="1.5"/><line x1="22" y1="82" x2="22" y2="24" stroke="rgba(0,190,100,.35)" stroke-width="1.5"/><rect x="28" y="52" width="15" height="30" rx="2" fill="rgba(0,190,100,.18)" stroke="rgba(0,190,100,.65)" stroke-width="1.5"/><rect x="48" y="36" width="15" height="46" rx="2" fill="rgba(0,190,100,.18)" stroke="rgba(0,190,100,.65)" stroke-width="1.5"/><rect x="68" y="60" width="15" height="22" rx="2" fill="rgba(0,190,100,.18)" stroke="rgba(0,190,100,.65)" stroke-width="1.5"/><circle cx="150" cy="50" r="22" fill="rgba(0,190,100,.06)" stroke="rgba(0,190,100,.65)" stroke-width="2.5"/><line x1="165" y1="65" x2="176" y2="78" stroke="rgba(0,190,100,.65)" stroke-width="3.5" stroke-linecap="round"/><line x1="140" y1="44" x2="160" y2="44" stroke="rgba(0,190,100,.35)" stroke-width="1.5"/><line x1="140" y1="51" x2="160" y2="51" stroke="rgba(0,190,100,.35)" stroke-width="1.5"/><line x1="140" y1="58" x2="152" y2="58" stroke="rgba(0,190,100,.35)" stroke-width="1.5"/></svg>`
+      }
+    ];
+
+    const signalSets = [
+      [46, 63, 35, 82, 51, 76, 44, 91, 58, 33, 69, 84],
+      [24, 42, 68, 35, 76, 51, 87, 44, 62, 31, 72, 56],
+      [58, 22, 74, 49, 92, 37, 69, 84, 46, 27, 61, 75],
+      [36, 64, 28, 79, 53, 88, 41, 70, 32, 58, 93, 45],
+      [72, 47, 83, 29, 55, 91, 63, 34, 76, 48, 67, 39]
+    ];
+
+    const state = {
+      lang: localStorage.getItem("portfolio.lang") || "fr",
+      theme: localStorage.getItem("portfolio.theme") || "light"
+    };
+
+    const els = {
+      body: document.body,
+      workspaceStatus: document.getElementById("workspaceStatus"),
+      workspaceTitle: document.getElementById("workspaceTitle"),
+      workspaceCopy: document.getElementById("workspaceCopy"),
+      projectsNote: document.getElementById("projectsNote"),
+      aboutPanelTitle: document.getElementById("aboutPanelTitle"),
+      aboutPanelText: document.getElementById("aboutPanelText"),
+      terminalPanelTitle: document.getElementById("terminalPanelTitle"),
+      terminalPanelText: document.getElementById("terminalPanelText"),
+      skillsNote: document.getElementById("skillsNote"),
+      skillList: document.getElementById("skillList"),
+      projectGrid: document.getElementById("projectGrid"),
+      contactText: document.getElementById("contactText"),
+      terminalOutput: document.getElementById("terminalOutput"),
+      terminalForm: document.getElementById("terminalForm"),
+      terminalInput: document.getElementById("terminalInput"),
+      terminalHint: document.getElementById("terminalHint"),
+      terminalDemoLabel: document.getElementById("terminalDemoLabel"),
+      terminalDemoText: document.getElementById("terminalDemoText"),
+      terminalInputLabel: document.getElementById("terminalInputLabel"),
+      terminalInputHelp: document.getElementById("terminalInputHelp"),
+      footerMode: document.getElementById("footerMode"),
+      prompt: document.getElementById("prompt")
+    };
+
+    function t() {
+      return content[state.lang];
+    }
+
+    function renderStaticText() {
+      const c = t();
+      document.documentElement.lang = state.lang;
+      els.body.dataset.lang = state.lang;
+      els.body.dataset.theme = state.theme;
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const key = node.dataset.i18n;
+        if (c[key]) node.textContent = c[key];
+      });
+      els.workspaceStatus.textContent = c.status;
+      els.workspaceTitle.textContent = c.workspaceTitle;
+      els.workspaceCopy.textContent = c.workspaceCopy;
+      els.projectsNote.textContent = c.projectsNote;
+      els.aboutPanelTitle.textContent = c.aboutTitle;
+      els.aboutPanelText.textContent = c.aboutText;
+      els.terminalPanelTitle.textContent = c.terminalTitle;
+      els.terminalPanelText.textContent = c.terminalText;
+      els.skillsNote.textContent = c.skillsNote;
+      els.contactText.textContent = c.contactText;
+      els.terminalHint.innerHTML = c.terminalHint;
+      els.terminalInput.placeholder = c.terminalPlaceholder;
+      els.terminalDemoLabel.textContent = c.terminalDemoLabel;
+      els.terminalDemoText.textContent = c.terminalDemoText;
+      els.terminalInputLabel.textContent = c.terminalInputLabel;
+      els.terminalInputHelp.textContent = c.terminalInputHelp;
+      els.footerMode.textContent = `${state.lang.toUpperCase()} · ${state.theme === "light" ? "Light" : "Dark"}`;
+      els.prompt.textContent = "alexis@portfolio:~$";
+    }
+
+    function renderButtons() {
+      document.querySelectorAll("[data-set-lang]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.setLang === state.lang));
+      });
+      document.querySelectorAll("[data-set-theme]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.setTheme === state.theme));
+      });
+    }
+
+    function renderProjects() {
+      els.projectGrid.innerHTML = projects.map((project, index) => {
+        const signal = signalSets[index].map((h) => `<span style="--h:${h}"></span>`).join("");
+        const tags = project.tags.map((tag) => `<span class="tag">${tag}</span>`).join("");
+        const element = project.link ? "a" : "article";
+        const attrs = project.link
+          ? `href="${project.link}" ${project.link.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}`
+          : `aria-label="${project.title}"`;
+        return `
+          <${element} class="project" data-accent="${project.accent}" ${attrs}>
+            <div class="project-thumb" role="img" aria-label="${project.title}">${project.thumb || ""}</div>
+            <div class="project-top">
+              <span class="project-index">0${index + 1} / ${project.id}</span>
+              <div class="project-signal" aria-hidden="true">${signal}</div>
+            </div>
+            <h3>${project.title}</h3>
+            <p>${project[state.lang]}</p>
+            <div class="tags">${tags}</div>
+          </${element}>
+        `;
+      }).join("");
+    }
+
+    function renderSkills() {
+      els.skillList.innerHTML = t().skills.map((skill) => `<span class="skill">${skill}</span>`).join("");
+    }
+
+    function renderAll() {
+      renderStaticText();
+      renderButtons();
+      renderProjects();
+      renderSkills();
+      localStorage.setItem("portfolio.lang", state.lang);
+      localStorage.setItem("portfolio.theme", state.theme);
+    }
+
+    function setMode(kind, value, source = "ui") {
+      state[kind] = value;
+      renderAll();
+      if (source === "terminal") {
+        print(`<span class="ok">updated</span> ${kind}: ${value}`);
+      }
+    }
+
+    function escapeHtml(value) {
+      return value.replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[char]);
+    }
+
+    function print(html) {
+      els.terminalOutput.innerHTML += `${html}\n`;
+      els.terminalOutput.scrollTop = els.terminalOutput.scrollHeight;
+    }
+
+    function helpText() {
+      if (state.lang === "fr") {
+        return `<span class="info">commandes</span>
+help
+projects
+open mirakl | open fbi | open synapse | open together | open payfit
+skills
+contact
+cv
+lang fr | lang en
+theme light | theme dark
+clear`;
+      }
+      return `<span class="info">commands</span>
+help
+projects
+open mirakl | open fbi | open synapse | open together | open payfit
+skills
+contact
+resume
+lang fr | lang en
+theme light | theme dark
+clear`;
+    }
+
+    function listProjects() {
+      return projects.map((project) => `- ${project.title} <span class="quiet">(${project.id})</span>`).join("\n");
+    }
+
+    function terminalContact() {
+      return `Email: alexishonnorat@gmail.com
+GitHub: https://github.com/alexishonnorat
+LinkedIn: https://www.linkedin.com/in/alexis-honnorat-516aa8214`;
+    }
+
+    function inspectProject(id) {
+      const project = projects.find((item) => item.id === id);
+      if (!project) return state.lang === "fr" ? "Projet introuvable." : "Project not found.";
+      return `<span class="info">${project.title}</span>
+${project[state.lang]}
+stack: ${project.tags.join(" · ")}`;
+    }
+
+    function handleCommand(raw) {
+      const cmd = raw.trim().toLowerCase();
+      if (!cmd) return;
+      print(`<span class="cmd">&gt; ${escapeHtml(raw)}</span>`);
+
+      if (cmd === "help" || cmd === "aide") return print(helpText());
+      if (cmd === "clear" || cmd === "cls") {
+        els.terminalOutput.innerHTML = "";
+        return;
+      }
+      if (cmd === "projects" || cmd === "projets" || cmd === "ls") return print(listProjects());
+      if (cmd === "skills" || cmd === "competences" || cmd === "compétences") return print(t().skills.join(" · "));
+      if (cmd === "contact") return print(terminalContact());
+      if (cmd === "cv" || cmd === "resume") {
+        window.open("CV_ALEXIS_HONNORAT.pdf", "_blank");
+        return print(state.lang === "fr" ? "Ouverture du CV." : "Opening resume.");
+      }
+      if (cmd === "lang fr" || cmd === "fr") return setMode("lang", "fr", "terminal");
+      if (cmd === "lang en" || cmd === "en") return setMode("lang", "en", "terminal");
+      if (cmd === "theme light" || cmd === "light") return setMode("theme", "light", "terminal");
+      if (cmd === "theme dark" || cmd === "dark") return setMode("theme", "dark", "terminal");
+      if (cmd.startsWith("open ") || cmd.startsWith("inspect ") || cmd.startsWith("stack ")) {
+        const id = cmd.split(" ").slice(1).join(" ");
+        const match = projects.find((project) => id.includes(project.id));
+        if (match && cmd.startsWith("open ")) {
+          if (!match.link) {
+            return print(state.lang === "fr" ? "Projet confidentiel : pas de lien public." : "Confidential project: no public link.");
+          }
+          window.location.href = match.link;
+          return print(`${state.lang === "fr" ? "Ouverture" : "Opening"}: ${match.title}`);
+        }
+        return print(inspectProject(match ? match.id : id));
+      }
+      if (cmd.startsWith("search ")) {
+        const query = cmd.slice(7);
+        const matches = projects.filter((project) => {
+          return `${project.title} ${project.id} ${project[state.lang]} ${project.tags.join(" ")}`.toLowerCase().includes(query);
+        });
+        return print(matches.length ? matches.map((project) => `- ${project.title}`).join("\n") : `<span class="warn">no match</span>`);
+      }
+      print(state.lang === "fr" ? `<span class="warn">Commande inconnue.</span> Tape help.` : `<span class="warn">Unknown command.</span> Type help.`);
+    }
+
+    document.querySelectorAll("[data-set-lang]").forEach((button) => {
+      button.addEventListener("click", () => setMode("lang", button.dataset.setLang));
+    });
+    document.querySelectorAll("[data-set-theme]").forEach((button) => {
+      button.addEventListener("click", () => setMode("theme", button.dataset.setTheme));
+    });
+
+    document.querySelectorAll("[data-command]").forEach((button) => {
+      button.addEventListener("click", () => {
+        els.terminalInput.value = button.dataset.command;
+        els.terminalInput.focus();
+        handleCommand(button.dataset.command);
+        els.terminalInput.value = "";
+      });
+    });
+
+    els.terminalForm.addEventListener("click", () => {
+      els.terminalInput.focus();
+    });
+
+    els.terminalForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      handleCommand(els.terminalInput.value);
+      els.terminalInput.value = "";
+    });
+
+    renderAll();
+    print(`<span class="ok">${state.lang === "fr" ? "portfolio prêt" : "portfolio ready"}</span>`);
+    print(helpText());
+  </script>
+</body>
+</html>

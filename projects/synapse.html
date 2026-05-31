@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Synapse — assistant RAG pour recherche scientifique HAL et PDF par Alexis Honnorat.">
+  <title>Synapse — Alexis Honnorat</title>
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f5ef;
+      --surface: #ffffff;
+      --ink: #141616;
+      --muted: #676a64;
+      --quiet: #92968c;
+      --line: #d8d7cf;
+      --line-strong: #bdbbb2;
+      --accent: #7c3aed;
+      --blue: #2563eb;
+      --green: #0f8f5f;
+      --shadow: 0 24px 70px rgba(27, 31, 35, .10);
+      --radius: 8px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), transparent 36%),
+        linear-gradient(315deg, color-mix(in srgb, var(--blue) 6%, transparent), transparent 44%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .25;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 74%);
+    }
+    a { color: inherit; text-decoration: none; }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 14px max(20px, calc((100vw - 1180px) / 2));
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+    }
+    .back, .nav-links a, .eyebrow, .meta, .step-num, .btn, footer { font-family: var(--mono); }
+    .back { color: var(--muted); font-size: 13px; transition: color .18s ease; }
+    .back:hover { color: var(--accent); }
+    .nav-links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .nav-links a {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 12px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      font-size: 12px;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .nav-links a:hover {
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(340px, .72fr);
+      gap: 26px;
+      align-items: center;
+      padding: 74px 0 52px;
+    }
+    .eyebrow {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+      color: var(--accent);
+      font-size: 12px;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 13%, transparent);
+    }
+    h1 {
+      margin: 0;
+      max-width: 840px;
+      font-family: var(--serif);
+      font-size: clamp(54px, 8vw, 102px);
+      line-height: .94;
+      font-weight: 400;
+    }
+    .lead {
+      max-width: 760px;
+      margin: 26px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.75;
+    }
+    .hero-card, .panel, .step {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--surface) 86%, transparent);
+    }
+    .hero-card { box-shadow: var(--shadow); padding: 22px; }
+    .hero-card h2 { margin: 0 0 14px; font-size: 18px; }
+    .meta-list { display: grid; gap: 10px; }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .meta:last-child { border-bottom: 0; }
+    .meta span:last-child { color: var(--ink); text-align: right; }
+
+    .section { padding: 68px 0 0; border-top: 1px solid var(--line); }
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 28px;
+      margin-bottom: 24px;
+    }
+    .section h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(34px, 4vw, 56px);
+      line-height: 1;
+      font-weight: 400;
+    }
+    .section-note {
+      max-width: 500px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.65;
+    }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .panel { padding: 22px; }
+    .panel h3, .step h3 { margin: 0 0 12px; font-size: 18px; }
+    .panel p, .panel li, .step p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .panel p, .step p { margin: 0; }
+    .panel ul { margin: 0; padding-left: 18px; }
+    .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .step { padding: 18px; }
+    .step-num { color: var(--accent); font-size: 12px; margin-bottom: 12px; }
+    .video-frame {
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      background: #101211;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    video, .video-frame iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      background: #101211;
+    }
+    .cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; padding: 68px 0; }
+    .btn {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 999px;
+      padding: 0 16px;
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      color: var(--muted);
+      font-size: 12px;
+      transition: transform .18s ease, color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      color: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 42%, var(--line));
+      background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+    }
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      border-top: 1px solid var(--line);
+      padding: 20px 0;
+      color: var(--quiet);
+      font-size: 11px;
+    }
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+    }
+    .stat-value {
+      display: block;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+    .stat-label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      font-family: var(--mono);
+      margin-top: 2px;
+    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .tech-table { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+    .tech-row {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--surface) 84%, transparent);
+    }
+    .tech-row:last-child { border-bottom: 0; }
+    .tech-key {
+      padding: 11px 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: color-mix(in srgb, var(--surface) 60%, var(--bg));
+      border-right: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+    }
+    .tech-val { padding: 11px 16px; font-size: 13.5px; color: var(--ink); line-height: 1.55; }
+
+    @media (max-width: 900px) {
+      nav { align-items: flex-start; }
+      .hero, .grid, .flow, .grid-2 { grid-template-columns: 1fr; }
+      .tech-row { grid-template-columns: 1fr; }
+      .tech-key { border-right: 0; border-bottom: 1px solid var(--line); }
+      .section-head { display: block; }
+      .section-note { margin-top: 14px; }
+    }
+    @media (max-width: 560px) {
+      nav { flex-direction: column; }
+      .nav-links { justify-content: flex-start; }
+      h1 { font-size: clamp(48px, 16vw, 72px); }
+      footer { flex-direction: column; }
+    }
+  </style>
+  <link rel="stylesheet" href="project-controls.css">
+</head>
+<body data-project="synapse">
+  <nav>
+    <a href="../workstation_codex.html" class="back" data-fr="← Data Workstation" data-en="← Data Workstation">← Data Workstation</a>
+    <div class="nav-links">
+      <a href="#concept">Concept</a>
+      <a href="#demo">Demo</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#rag">RAG</a>
+      <a href="#ml">ML features</a>
+      <a href="#architecture">Architecture</a>
+    </div>
+    <div class="nav-controls">
+      <button type="button" class="nav-lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="nav-lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="eyebrow">HAL Science · RAG chatbot</div>
+        <h1>Synapse</h1>
+        <p class="lead">
+          An academic research assistant for discovering French theses through HAL, reading PDFs and asking contextual questions
+          with sourced answers, summaries and semantic recommendations.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-value">4 000+</span><span class="stat-label">HAL theses</span></div>
+          <div class="stat"><span class="stat-value">8</span><span class="stat-label">domains</span></div>
+          <div class="stat"><span class="stat-value">5</span><span class="stat-label">methodologies</span></div>
+          <div class="stat"><span class="stat-value">Hybrid</span><span class="stat-label">RAG pipeline</span></div>
+        </div>
+      </div>
+
+      <aside class="hero-card" aria-label="Project summary">
+        <h2>Project frame</h2>
+        <div class="meta-list">
+          <div class="meta"><span>Type</span><span>Academic AI assistant</span></div>
+          <div class="meta"><span>Source</span><span>HAL Science API + PDFs</span></div>
+          <div class="meta"><span>Core</span><span>RAG, classification, summaries</span></div>
+          <div class="meta"><span>Interface</span><span>Streamlit · FR/EN</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="concept">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Concept</p>
+          <h2>Research without the friction.</h2>
+        </div>
+        <p class="section-note">One interface from search to understanding — no tab-switching, no manual tracking.</p>
+      </div>
+      <div class="grid-2">
+        <article class="panel">
+          <h3>The problem</h3>
+          <p>Academic research means jumping between HAL search, downloading PDFs, skimming 80-page theses to find one relevant section, and manually noting which paper said what. Nothing connects these steps — every tool solves one part and ignores the rest.</p>
+        </article>
+        <article class="panel">
+          <h3>The solution</h3>
+          <p>Synapse connects the HAL Science API to a hybrid RAG pipeline and ML modules inside a single Streamlit interface. Search, classify automatically, chat with the document, compare similar theses — without leaving the app. Every answer traces back to the exact chunk it came from.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Demo</p>
+          <h2>See Synapse in action.</h2>
+        </div>
+        <p class="section-note">
+          A walkthrough of the research workflow: searching, selecting a document and interacting with the assistant.
+        </p>
+      </div>
+
+      <div class="video-frame">
+        <iframe src="https://www.youtube.com/embed/vmS8EVYWfvY"
+          title="Synapse demo"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen></iframe>
+      </div>
+    </section>
+
+    <section class="section" id="workflow">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">User workflow</p>
+          <h2>Search, read, ask, compare.</h2>
+        </div>
+        <p class="section-note">
+          Synapse is designed for researchers who need to move from a broad literature search to focused document understanding.
+        </p>
+      </div>
+
+      <div class="flow">
+        <article class="step">
+          <div class="step-num">01</div>
+          <h3>Search HAL</h3>
+          <p>Query the French open archives (HAL Science API) with keyword, domain and methodology filters. Results display enriched metadata — authors, institution, abstract, year — alongside ML-generated classification badges. The search layer handles pagination and delivers structured thesis objects ready for deeper analysis.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">02</div>
+          <h3>Classify</h3>
+          <p>A classification pipeline detects domain (8 categories: CS, medicine, economics…), methodology (5 types: experimental, theoretical, applied…) and contribution type for each thesis. Rule-based heuristics run first; a transformer-based mode activates for ambiguous cases, improving accuracy on specialised vocabulary.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">03</div>
+          <h3>Chat with PDF</h3>
+          <p>Click any thesis to download and vectorize its PDF. PyMuPDF extracts the text; FAISS indexes the chunks. A side-by-side interface lets you ask questions on the document while seeing the source pages. Every answer cites the specific chunks it was built from.</p>
+        </article>
+        <article class="step">
+          <div class="step-num">04</div>
+          <h3>Recommend</h3>
+          <p>OpenAI embeddings represent each document as a semantic vector. The recommendation engine finds the k-nearest neighbours in the FAISS index and surfaces similar theses based on content proximity and metadata alignment — not just keyword overlap.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="rag">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">RAG system</p>
+          <h2>Contextual answers with traceability.</h2>
+        </div>
+        <p class="section-note">
+          The RAG layer extracts PDF content, chunks it, indexes it in a vector store and answers questions with citations to retrieved passages.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="panel">
+          <h3>PDF processing</h3>
+          <p>PyMuPDF extracts full document text before a hierarchical chunking strategy splits it into overlapping sections. Chunk size and overlap are tunable. Each chunk is embedded with OpenAI's text-embedding-ada-002 and stored in FAISS. The pipeline handles multi-column layouts, footnotes and reference sections gracefully.</p>
+        </article>
+        <article class="panel">
+          <h3>Vector search</h3>
+          <p>FAISS stores and retrieves embeddings at sub-second latency. A configurable top-k retrieval step pulls the most relevant chunks; an optional MMR (Maximal Marginal Relevance) pass diversifies results to avoid redundant context. BM25 reranking adds a lexical signal on top of the semantic one.</p>
+        </article>
+        <article class="panel">
+          <h3>Chat experience</h3>
+          <p>LangChain orchestrates the RAG loop: chunks are injected into the context window alongside the user's question, and GPT-4o generates a grounded answer. The PDF viewer scrolls to cited pages. Conversation history is preserved across turns within a session.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="ml">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">ML features</p>
+          <h2>More than retrieval.</h2>
+        </div>
+        <p class="section-note">
+          Synapse adds classification, multi-level summaries and recommendations to help users navigate a research corpus faster.
+        </p>
+      </div>
+
+      <div class="grid">
+        <article class="panel">
+          <h3>Classification</h3>
+          <p>Automatic detection of domain (8 categories: CS, medicine, economics, law…), methodology (5 types: experimental, theoretical, applied, review, mixed) and contribution type. Rule-based heuristics run first for speed; a transformer-based mode activates for ambiguous cases where vocabulary is too specialised for keyword matching.</p>
+        </article>
+        <article class="panel">
+          <h3>Summaries</h3>
+          <p>Three levels designed for different reading contexts: <strong>TL;DR</strong> (2–3 sentences, fast triage), <strong>executive</strong> (structured paragraph, decision-making), <strong>detailed</strong> (full breakdown of method, results and contribution). Generated via GPT-4o with document context injected.</p>
+        </article>
+        <article class="panel">
+          <h3>Recommendations</h3>
+          <p>OpenAI embeddings represent each viewed document as a semantic vector. The engine queries the FAISS index for k-nearest neighbours and ranks results by a combined score of content proximity and metadata alignment (domain, methodology, institution). Goes beyond keyword overlap to find structurally similar work.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Architecture</p>
+          <h2>Python AI application.</h2>
+        </div>
+        <p class="section-note">HAL API, hybrid RAG and ML modules assembled in a Streamlit interface with full source traceability.</p>
+      </div>
+
+      <div class="tech-table">
+        <div class="tech-row">
+          <span class="tech-key">Language</span>
+          <span class="tech-val">Python 3.9+ · 2 GB RAM minimum (4 GB recommended for ML models)</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Interface</span>
+          <span class="tech-val">Streamlit — search, PDF viewer, chat, summaries and recommendations in one app · FR/EN i18n</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Search</span>
+          <span class="tech-val">HAL Science API — keyword + domain + methodology filters · pagination · enriched metadata</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">RAG</span>
+          <span class="tech-val">LangChain · FAISS · OpenAI text-embedding-ada-002 · GPT-4o — chunk-level source citation</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">PDF</span>
+          <span class="tech-val">PyMuPDF — hierarchical chunking · tunable chunk size and overlap · multi-column + footnote support</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Retrieval</span>
+          <span class="tech-val">FAISS top-k (sub-second) · MMR diversification · BM25 reranking for lexical signal</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">ML modules</span>
+          <span class="tech-val">classifier.py · summarizer.py · recommender.py — rule-based + transformer modes</span>
+        </div>
+        <div class="tech-row">
+          <span class="tech-key">Structure</span>
+          <span class="tech-val">src/ → api_client.py · rag_engine.py · rag_engine_enhanced.py · ml_features/ · translations.py</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <a href="../workstation_codex.html" class="btn" data-fr="Retour à la workstation" data-en="Back to workstation">Back to workstation</a>
+      <a href="https://github.com/jeanlisek/Synapse" target="_blank" rel="noopener" class="btn" data-fr="GitHub" data-en="GitHub">GitHub</a>
+    </div>
+
+    <footer>
+      <span>Synapse — HAL Science RAG Chatbot</span>
+      <span>LangChain · OpenAI · FAISS · Streamlit</span>
+    </footer>
+  </main>
+  <script src="project-controls.js"></script>
+</body>
+</html>

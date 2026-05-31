@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FBI Criminal Profiler — Alexis Honnorat">
+  <title>FBI Criminal Profiler — Alexis Honnorat</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200;9..144,300;9..144,400&family=Fira+Code:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      color-scheme: light;
+      --bg:            #f6f5ef;
+      --bg-2:          #ffffff;
+      --bg-3:          #f0efe7;
+      --accent:        #d95f18;
+      --accent-dim:    color-mix(in srgb, var(--accent) 8%, transparent);
+      --accent-border: color-mix(in srgb, var(--accent) 28%, #d8d7cf);
+      --text:          #141616;
+      --text-2:        #676a64;
+      --text-3:        #92968c;
+      --line:          #d8d7cf;
+      --line-strong:   #bdbbb2;
+      --red:           #c93f3f;
+      --shadow:        0 24px 70px rgba(27, 31, 35, .10);
+
+      --ff-display: Georgia, "Times New Roman", serif;
+      --ff-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --ff-body:    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 8%, transparent), transparent 36%),
+        linear-gradient(315deg, color-mix(in srgb, #0f8f5f 6%, transparent), transparent 42%),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content:'';
+      position:fixed; inset:0;
+      background-image:
+        linear-gradient(var(--line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity:.28;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 75%);
+      pointer-events:none; z-index:0;
+    }
+
+    body::after {
+      content:'';
+      position:fixed; inset:0;
+      background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 20%, transparent), transparent 52%);
+      pointer-events:none; z-index:0;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    /* ─── NAV ─────────────────────────────────────────────── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:.9rem 3rem;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-back {
+      display:flex; align-items:center; gap:.75rem;
+      font-family:var(--ff-mono); font-size:.65rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--text-2);
+      transition:color .2s;
+    }
+    .nav-back:hover { color:var(--accent); }
+    .nav-back svg { width:14px; height:14px; }
+
+    .nav-title {
+      font-family:var(--ff-mono); font-size:.65rem;
+      letter-spacing:0; color:var(--text-3);
+    }
+
+    .nav-links { display:flex; }
+    .nav-links a {
+      font-family:var(--ff-mono); font-size:.6rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--text-2);
+      padding:.45rem .9rem;
+      border:1px solid var(--line);
+      border-right:0;
+      transition:color .2s, background .2s, border-color .2s;
+    }
+    .nav-links a:first-child { border-radius:999px 0 0 999px; }
+    .nav-links a:last-child { border-right:1px solid var(--line); border-radius:0 999px 999px 0; }
+    .nav-links a:hover { color:var(--accent); background:var(--accent-dim); border-color:var(--accent-border); }
+
+    /* ─── HERO ───────────────────────────────────────────── */
+    #hero {
+      position:relative; z-index:1;
+      padding:10rem 3rem 6rem;
+      border-bottom:1px solid var(--line);
+    }
+
+    .hero-inner { max-width:1180px; margin:0 auto; }
+
+    .hero-meta {
+      display:flex; align-items:center; gap:1rem;
+      margin-bottom:2rem;
+      opacity:0; animation: fadeUp .5s ease forwards .1s;
+    }
+
+    .hero-tag {
+      font-family:var(--ff-mono); font-size:.55rem;
+      letter-spacing:0; text-transform:none;
+      padding:.4rem .75rem;
+      border:1px solid var(--accent-border);
+      color:var(--accent);
+      background:var(--accent-dim);
+      border-radius:999px;
+    }
+
+    .hero-date {
+      font-family:var(--ff-mono); font-size:.6rem;
+      color:var(--text-3); letter-spacing:0;
+    }
+
+    h1 {
+      font-family:var(--ff-display);
+      font-size: clamp(3.4rem, 8vw, 7rem);
+      font-weight:400; line-height:.94;
+      margin-bottom:1.5rem;
+      opacity:0; animation: fadeUp .6s ease forwards .25s;
+    }
+
+    .hero-desc {
+      font-size:1rem; line-height:1.8;
+      color:var(--text-2);
+      max-width:760px; margin-bottom:3rem;
+      opacity:0; animation: fadeUp .6s ease forwards .4s;
+    }
+
+    .hero-stats {
+      display:grid; grid-template-columns:repeat(4, 1fr);
+      gap:0;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background: color-mix(in srgb, var(--bg-2) 84%, transparent);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      opacity:0; animation: fadeUp .6s ease forwards .55s;
+    }
+
+    .stat {
+      padding:1.5rem 2rem;
+      border-right:1px solid var(--line);
+    }
+    .stat:last-child { border-right:none; }
+
+    .stat-val {
+      font-family:var(--ff-display);
+      font-size:2.2rem; font-weight:400;
+      color:var(--accent); line-height:1;
+      margin-bottom:.4rem;
+    }
+
+    .stat-label {
+      font-family:var(--ff-mono); font-size:.58rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--text-3);
+    }
+
+    /* ─── LAYOUT ──────────────────────────────────────────── */
+    .page-wrap { max-width:1180px; margin:0 auto; padding:0 3rem; }
+
+    section { position:relative; z-index:1; padding:6rem 0; }
+    section + section { border-top:1px solid var(--line); }
+
+    .sec-label {
+      font-family:var(--ff-mono); font-size:.6rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--accent); margin-bottom:2.5rem;
+      display:flex; align-items:center; gap:1rem;
+    }
+    .sec-label::after {
+      content:''; flex:1; height:1px; background:var(--accent-border);
+    }
+
+    h2 {
+      font-family:var(--ff-display);
+      font-size: clamp(2rem,4vw,3.6rem);
+      font-weight:400; color:var(--text);
+      margin-bottom:1.5rem;
+    }
+
+    .body-text {
+      font-size:.95rem; line-height:1.85;
+      color:var(--text-2); margin-bottom:1.25rem;
+    }
+    .body-text strong { color:var(--text); font-weight:500; }
+
+    .context-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:4rem;
+    }
+
+    /* ─── PIPELINE ───────────────────────────────────────── */
+    #pipeline { background:color-mix(in srgb, var(--bg-2) 48%, transparent); }
+
+    .pipeline-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:0; border:1px solid var(--line);
+      border-radius:8px;
+      background: color-mix(in srgb, var(--bg-2) 86%, transparent);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      margin-bottom:4rem;
+    }
+
+    .pipe-step {
+      padding:2rem;
+      border-right:1px solid var(--line);
+    }
+    .pipe-step:last-child { border-right:none; }
+
+    .pipe-num {
+      font-family:var(--ff-mono); font-size:.6rem;
+      color:var(--accent); letter-spacing:0;
+      margin-bottom:.75rem;
+    }
+
+    .pipe-name {
+      font-family:var(--ff-display);
+      font-size:1.3rem; font-weight:400;
+      color:var(--text); margin-bottom:.75rem;
+    }
+
+    .pipe-desc {
+      font-size:.82rem; line-height:1.7;
+      color:var(--text-2);
+    }
+
+    .pipe-arrow {
+      display:flex; justify-content:center;
+      align-items:center; gap:.75rem;
+      padding:1.5rem 0; margin-bottom:4rem;
+      font-family:var(--ff-mono); font-size:.6rem;
+      color:var(--text-3); letter-spacing:0; text-transform:none;
+    }
+    .pipe-arrow::before, .pipe-arrow::after {
+      content:''; flex:1; height:1px; background:var(--line);
+    }
+
+    /* ─── FONCTIONS CLÉS ─────────────────────────────────── */
+    .fn-list { display:flex; flex-direction:column; gap:3rem; }
+
+    .fn-block {
+      display:grid; grid-template-columns:1fr 1fr;
+      gap:3rem; align-items:start;
+      padding:2.5rem;
+      border:1px solid var(--line);
+      border-radius:8px;
+      background:color-mix(in srgb, var(--bg-2) 86%, transparent);
+      box-shadow: 0 14px 38px rgba(27,31,35,.06);
+    }
+
+    .fn-header { margin-bottom:1rem; }
+
+    .fn-name {
+      font-family:var(--ff-mono); font-size:.85rem;
+      color:var(--accent); margin-bottom:.5rem;
+    }
+
+    .fn-sig {
+      font-family:var(--ff-mono); font-size:.7rem;
+      color:var(--text-3); margin-bottom:1rem;
+    }
+
+    .fn-desc {
+      font-size:.85rem; line-height:1.75;
+      color:var(--text-2);
+    }
+    .fn-desc strong { color:var(--text); font-weight:500; }
+
+    .panel-note {
+      padding:1.25rem;
+      border:1px solid var(--line-strong);
+      border-radius:8px;
+      background:color-mix(in srgb, var(--bg-2) 82%, transparent);
+    }
+
+    .panel-note span {
+      font-family:var(--ff-mono);
+      font-size:.58rem;
+      color:var(--accent);
+    }
+
+    .panel-note p {
+      margin:.75rem 0 0;
+      color:var(--text-2);
+      font-size:.85rem;
+      line-height:1.75;
+    }
+
+    /* ─── DONNÉES ─────────────────────────────────────────── */
+    #data { background:color-mix(in srgb, var(--bg-2) 48%, transparent); }
+
+    .schema-grid {
+      display:grid; grid-template-columns:repeat(3,1fr);
+      gap:0; border:1px solid var(--line);
+      border-radius:8px;
+      background:color-mix(in srgb, var(--bg-2) 86%, transparent);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .schema-group {
+      padding:1.75rem;
+      border-right:1px solid var(--line);
+    }
+    .schema-group:last-child { border-right:none; }
+
+    .schema-group-title {
+      font-family:var(--ff-mono); font-size:.58rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--accent);
+      padding-bottom:.6rem; margin-bottom:1rem;
+      border-bottom:1px solid var(--accent-border);
+    }
+
+    .schema-col {
+      display:flex; align-items:baseline; gap:.6rem;
+      padding:.45rem 0;
+      border-bottom:1px solid var(--line);
+    }
+    .schema-col:last-child { border-bottom:none; }
+
+    .col-name {
+      font-family:var(--ff-mono); font-size:.7rem;
+      color:var(--text); min-width:0; flex:1;
+    }
+
+    .col-type {
+      font-family:var(--ff-mono); font-size:.55rem;
+      color:var(--accent); white-space:nowrap;
+    }
+
+    /* ─── TECH STACK ──────────────────────────────────────── */
+    .tech-table {
+      width:100%; border-collapse:collapse;
+      border:1px solid var(--line);
+      border-radius:8px;
+      overflow:hidden;
+      background:color-mix(in srgb, var(--bg-2) 86%, transparent);
+      box-shadow:var(--shadow);
+    }
+
+    .tech-table td {
+      padding:.9rem 1.25rem;
+      border-bottom:1px solid var(--line);
+      font-size:.82rem;
+    }
+    .tech-table tr:last-child td { border-bottom:none; }
+
+    .tech-table td:first-child {
+      font-family:var(--ff-mono); font-size:.58rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--text-3); width:140px;
+    }
+
+    .tech-table td:nth-child(2) {
+      font-family:var(--ff-mono); font-size:.75rem;
+      color:var(--accent);
+    }
+
+    .tech-table td:last-child { color:var(--text-2); }
+
+    /* ─── FOOTER CTA ──────────────────────────────────────── */
+    #cta { padding:5rem 0; text-align:center; }
+
+    .cta-inner {
+      display:inline-flex; flex-direction:column;
+      align-items:center; gap:2rem;
+    }
+
+    .cta-label {
+      font-family:var(--ff-mono); font-size:.6rem;
+      letter-spacing:0; text-transform:none;
+      color:var(--text-3);
+    }
+
+    .cta-btns { display:flex; gap:.75rem; }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.7rem 1.4rem;
+      font-family:var(--ff-mono); font-size:.62rem;
+      letter-spacing:0; text-transform:none;
+      border:1px solid var(--line-strong); color:var(--text-2);
+      border-radius:999px; transition:all .25s;
+      background:color-mix(in srgb, var(--bg-2) 74%, transparent);
+    }
+    .btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-dim); }
+    .btn.hi { border-color:var(--accent); color:var(--accent); }
+    .btn.hi:hover { background:var(--accent); color:var(--bg); }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      position:relative; z-index:1;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1.4rem 3rem;
+      border-top:1px solid var(--line);
+      font-family:var(--ff-mono); font-size:.55rem;
+      letter-spacing:0; color:var(--text-3);
+    }
+
+    /* ─── REVEAL ──────────────────────────────────────────── */
+    .reveal {
+      opacity:0; transform:translateY(20px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.vis { opacity:1; transform:translateY(0); }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(16px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width:900px) {
+      nav { padding:1rem 1.5rem; }
+      .nav-title { display:none; }
+      #hero { padding:8rem 1.5rem 4rem; }
+      .page-wrap { padding:0 1.5rem; }
+      .hero-stats { grid-template-columns:repeat(2,1fr); }
+      .stat { border-bottom:1px solid var(--line); }
+      .pipeline-grid { grid-template-columns:1fr; }
+      .pipe-step { border-right:none; border-bottom:1px solid var(--line); }
+      .fn-block { grid-template-columns:1fr; }
+      .context-grid { grid-template-columns:1fr; gap:2rem; }
+      .schema-grid { grid-template-columns:1fr; }
+      .schema-group { border-right:none; border-bottom:1px solid var(--line); }
+      footer { flex-direction:column; gap:.7rem; text-align:center; }
+    }
+  </style>
+  <link rel="stylesheet" href="project-controls.css">
+</head>
+<body data-project="fbi">
+
+  <!-- NAV -->
+  <nav>
+    <a href="../workstation_codex.html" class="nav-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      Portfolio Codex
+    </a>
+    <span class="nav-title">FBI Criminal Profiler</span>
+    <div class="nav-links">
+      <a href="https://fugitive-viz-ai.lovable.app" target="_blank" rel="noopener">Live</a>
+      <a href="https://github.com/alexishonnorat/fbi-project" target="_blank" rel="noopener" data-fr="GitHub" data-en="GitHub">GitHub</a>
+    </div>
+    <div class="nav-controls">
+      <button type="button" class="nav-lang-btn" data-set-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="nav-lang-btn" data-set-lang="fr" aria-pressed="false">FR</button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-inner">
+      <div class="hero-meta">
+        <span class="hero-tag">Web Scraping</span>
+        <span class="hero-tag">Data Viz</span>
+        <span class="hero-tag">IA</span>
+        <span class="hero-date">Oct. 2025</span>
+      </div>
+      <h1>FBI Criminal Profiler</h1>
+      <p class="hero-desc">
+        Pipeline complet d'extraction, de nettoyage et d'analyse des 439 profils de fugitifs recherchés par le FBI. Visualisations Plotly interactives et assistant IA conversationnel pour interroger les données en langage naturel.
+      </p>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-val">439</div>
+          <div class="stat-label">Profils scrapés</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">41</div>
+          <div class="stat-label">Nationalités</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">8</div>
+          <div class="stat-label">Catégories de crimes</div>
+        </div>
+        <div class="stat">
+          <div class="stat-val">48</div>
+          <div class="stat-label">Bureaux FBI</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTEXTE -->
+  <section id="context">
+    <div class="page-wrap">
+      <div class="sec-label reveal">Contexte</div>
+      <div class="context-grid reveal">
+        <div>
+          <h2>Problème</h2>
+          <p class="body-text">
+            Les données sur les fugitifs du FBI sont publiques mais dispersées sur des centaines de pages HTML individuelles. Il n'existe aucun dataset structuré permettant d'analyser les patterns démographiques, comportementaux ou géographiques de cette population.
+          </p>
+          <p class="body-text">
+            Comment extraire, normaliser et rendre exploitables 439 profils aux formats hétérogènes — tailles en pieds/pouces ou cm, dates en 7 formats différents, nationalités textuelles non standardisées — tout en les rendant interrogeables par un non-spécialiste ?
+          </p>
+        </div>
+        <div>
+          <h2>Solution</h2>
+          <p class="body-text">
+            Un pipeline Python en 3 étapes : <strong>scraping asynchrone</strong> avec Crawl4AI derrière un proxy rotatif, <strong>nettoyage et enrichissement</strong> avec Pandas (normalisation des unités, catégorisation, extraction de features), puis <strong>exposition</strong> via 8 graphiques Plotly interactifs et un chatbot LangChain.
+          </p>
+          <p class="body-text">
+            Projet réalisé avec <strong>Lili Sheppard</strong> et <strong>Hugo Fissier</strong> dans le cadre d'un cours de data engineering.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIPELINE -->
+  <section id="pipeline">
+    <div class="page-wrap">
+      <div class="sec-label reveal">Architecture</div>
+      <h2 class="reveal">Pipeline en 3 phases</h2>
+
+      <div class="pipeline-grid reveal">
+        <div class="pipe-step">
+          <div class="pipe-num">01 — Scraping</div>
+          <div class="pipe-name">Extraction</div>
+          <p class="pipe-desc">
+            Génération des URLs de listing (12 pages, ~40 profils/page). Pour chaque URL de profil : crawl asynchrone via Crawl4AI + proxy Decodo, parsing BeautifulSoup, extraction structurée (nom, alias, photo, tableau description, bureau FBI).
+          </p>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">02 — Cleaning</div>
+          <div class="pipe-name">Nettoyage</div>
+          <p class="pipe-desc">
+            18 fonctions de transformation : parsing multi-format des dates, conversion taille/poids vers unités SI, extraction ISO pays (60+ mappings), catégorisation des métiers en 18 groupes, détection booléenne des marques et récompenses.
+          </p>
+        </div>
+        <div class="pipe-step">
+          <div class="pipe-num">03 — Output</div>
+          <div class="pipe-name">Exposition</div>
+          <p class="pipe-desc">
+            Export vers JSON brut + CSV/Excel nettoyé. 8 visualisations Plotly interactives déployées sur Lovable. Chatbot LangChain + OpenAI pour interroger le dataset en langage naturel avec mémoire conversationnelle.
+          </p>
+        </div>
+      </div>
+
+      <!-- Fonctions clés -->
+      <div class="sec-label reveal" style="margin-bottom:2rem;">Choix techniques clés</div>
+
+      <div class="fn-list">
+
+        <div class="fn-block reveal">
+          <div>
+            <div class="fn-header">
+              <div class="fn-name">Extraction robuste</div>
+              <div class="fn-sig">HTML public → profil structuré</div>
+            </div>
+            <p class="fn-desc">
+              Coeur du scraper. Parse le HTML d'un profil individuel et extrait 9 champs structurés : nom, alias, URL photo, tableau de description physique (taille, poids, couleur des yeux, etc.), remarques, mise en garde, et bureau FBI responsable.<br><br>
+              La <strong>catégorie du crime</strong> est extraite directement depuis la structure des URLs, ce qui évite de dépendre d'un contenu HTML fragile.
+            </p>
+          </div>
+          <div class="panel-note">
+            <span>Approche</span>
+            <p>Extraire les champs stables, isoler les variations de format et conserver une sortie homogène exploitable par Pandas.</p>
+          </div>
+        </div>
+
+        <div class="fn-block reveal">
+          <div>
+            <div class="fn-header">
+              <div class="fn-name">Normalisation multi-format</div>
+              <div class="fn-sig">unités impériales / métriques → SI</div>
+            </div>
+            <p class="fn-desc">
+              Normalise les tailles vers les centimètres depuis plusieurs formats trouvés dans les profils : centimètres bruts, mètres, pouces seuls, pieds + pouces et valeurs numériques ambiguës discriminées par plage logique.<br><br>
+              Même logique pour les poids : conversion kg/livres, gestion des intervalles et sortie numérique comparable.
+            </p>
+          </div>
+          <div class="panel-note">
+            <span>Résultat</span>
+            <p>Des variables quantitatives propres, utilisables pour histogrammes, comparaisons et requêtes du chatbot.</p>
+          </div>
+        </div>
+
+        <div class="fn-block reveal">
+          <div>
+            <div class="fn-header">
+              <div class="fn-name">Catégorisation métier</div>
+              <div class="fn-sig">texte libre → familles interprétables</div>
+            </div>
+            <p class="fn-desc">
+              Catégorise les métiers en texte libre en <strong>18 groupes normalisés</strong> via un dictionnaire de mots-clés : Military/Intelligence, Medical, IT/Technology, Construction, Transportation, Finance/Trading, Government, Law Enforcement, et 10 autres.<br><br>
+              L'objectif est de transformer des descriptions très hétérogènes en dimensions analytiques stables, sans perdre la traçabilité vers les champs originaux.
+            </p>
+          </div>
+          <div class="panel-note">
+            <span>Lecture data</span>
+            <p>Les catégories rendent possible l'analyse des profils par grands domaines d'activité, au-delà des libellés bruts.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DONNÉES -->
+  <section id="data">
+    <div class="page-wrap">
+      <div class="sec-label reveal">Output</div>
+      <h2 class="reveal">Schéma du dataset nettoyé</h2>
+      <p class="body-text reveal" style="max-width:700px; margin-bottom:2.5rem;">
+        Le DataFrame final contient <strong>439 lignes</strong> et est organisé en 6 groupes thématiques. Les unités sont normalisées (SI), les champs texte catégorisés, les booléens typés proprement.
+      </p>
+
+      <div class="schema-grid reveal">
+        <div class="schema-group">
+          <div class="schema-group-title">Identification</div>
+          <div class="schema-col"><span class="col-name">url</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">name</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">alias_text</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">alias_count</span><span class="col-type">Int64</span></div>
+          <div class="schema-col"><span class="col-name">ncic_number</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">category</span><span class="col-type">str</span></div>
+        </div>
+        <div class="schema-group">
+          <div class="schema-group-title">Démographie</div>
+          <div class="schema-col"><span class="col-name">date_of_birth</span><span class="col-type">date</span></div>
+          <div class="schema-col"><span class="col-name">age_years</span><span class="col-type">Int64</span></div>
+          <div class="schema-col"><span class="col-name">zodiac_sign</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">sex</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">nationality</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">birth_country</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">birth_country_code</span><span class="col-type">ISO</span></div>
+        </div>
+        <div class="schema-group">
+          <div class="schema-group-title">Description physique</div>
+          <div class="schema-col"><span class="col-name">height_cm</span><span class="col-type">float</span></div>
+          <div class="schema-col"><span class="col-name">weight_kg</span><span class="col-type">float</span></div>
+          <div class="schema-col"><span class="col-name">eye_color</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">hair_color</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">has_mark</span><span class="col-type">bool</span></div>
+          <div class="schema-group-title" style="margin-top:1.5rem;">Langues</div>
+          <div class="schema-col"><span class="col-name">language_primary</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">language_secondary</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">language_tertiary</span><span class="col-type">str</span></div>
+          <div class="schema-group-title" style="margin-top:1.5rem;">FBI</div>
+          <div class="schema-col"><span class="col-name">occupation_category</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">fbi_field_office</span><span class="col-type">str</span></div>
+          <div class="schema-col"><span class="col-name">has_caution</span><span class="col-type">bool</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECH STACK -->
+  <section id="stack">
+    <div class="page-wrap">
+      <div class="sec-label reveal">Stack technique</div>
+      <table class="tech-table reveal">
+        <tr>
+          <td>Scraping</td>
+          <td>Crawl4AI</td>
+          <td>Crawler asynchrone Python — parsing JS, gestion proxy, retry logic</td>
+        </tr>
+        <tr>
+          <td>Parsing HTML</td>
+          <td>BeautifulSoup4</td>
+          <td>Extraction des balises spécifiques au site fbi.gov</td>
+        </tr>
+        <tr>
+          <td>Proxy</td>
+          <td>Decodo</td>
+          <td>Proxy rotatif via gate.decodo.com:10001, vérifié avant chaque session</td>
+        </tr>
+        <tr>
+          <td>Processing</td>
+          <td>Pandas</td>
+          <td>DataFrame operations, json_normalize, typing Int64/bool</td>
+        </tr>
+        <tr>
+          <td>Visualisation</td>
+          <td>Plotly</td>
+          <td>8 graphiques interactifs — histogrammes, pie charts, scatter plots, cartes</td>
+        </tr>
+        <tr>
+          <td>LLM</td>
+          <td>LangChain + OpenAI</td>
+          <td>RetrievalQA chain, mémoire conversationnelle, température 0.7</td>
+        </tr>
+        <tr>
+          <td>Déploiement</td>
+          <td>Lovable.app</td>
+          <td>Hosting intégré, live demo sans infrastructure</td>
+        </tr>
+        <tr>
+          <td>Output</td>
+          <td>JSON + CSV + Excel</td>
+          <td>3 fichiers par run : brut JSON, DataFrame brut, DataFrame nettoyé</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="cta">
+    <div class="page-wrap">
+      <div class="cta-inner">
+        <span class="cta-label">Explorer le projet</span>
+        <div class="cta-btns">
+          <a href="https://fugitive-viz-ai.lovable.app" target="_blank" rel="noopener" class="btn hi" data-fr="Live Demo" data-en="Live Demo">Live Demo</a>
+          <a href="https://github.com/alexishonnorat/fbi-project" target="_blank" rel="noopener" class="btn" data-fr="GitHub" data-en="GitHub">GitHub</a>
+          <a href="../workstation_codex.html" class="btn" data-fr="Retour au portfolio" data-en="Back to portfolio">Retour au portfolio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Alexis Honnorat — FBI Criminal Profiler</span>
+    <span>Oct. 2025 · Python · Crawl4AI · LangChain</span>
+  </footer>
+
+  <script>
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+    }, { threshold:0.07, rootMargin:'0px 0px -30px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+
+  <script src="project-controls.js"></script>
+</body>
+</html>
