@@ -1284,8 +1284,14 @@
     }
 
     function setMode(kind, value, source = "ui") {
+      const prevLang = state.lang;
       state[kind] = value;
       renderAll();
+      if (kind === "lang" && value !== prevLang) {
+        els.terminalOutput.innerHTML = "";
+        print(`<span class="ok">${state.lang === "fr" ? "portfolio prêt" : "portfolio ready"}</span>`);
+        print(helpText());
+      }
       if (source === "terminal") {
         print(`<span class="ok">updated</span> ${kind}: ${value}`);
       }
