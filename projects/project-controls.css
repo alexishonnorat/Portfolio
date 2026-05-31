@@ -47,14 +47,16 @@
 body[data-theme="dark"] {
   color-scheme: dark;
   --bg: #101211;
+  --bg-2: #171a19;
+  --bg-3: #202421;
   --surface: #171a19;
   --surface-2: #202421;
   --ink: #f1f3ed;
   --text: #f1f3ed;
-  --muted: #a5aaa1;
   --text-2: #a5aaa1;
-  --quiet: #747a70;
   --text-3: #747a70;
+  --muted: #a5aaa1;
+  --quiet: #747a70;
   --line: #30362f;
   --line-strong: #454d43;
   --shadow: 0 28px 80px rgba(0, 0, 0, .34);

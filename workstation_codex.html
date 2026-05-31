@@ -1017,6 +1017,18 @@
       </div>
     </section>
 
+    <div id="overlay-42" aria-hidden="true" style="
+      position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+      pointer-events:none;z-index:9999;opacity:0;
+      transition:opacity .5s ease;
+    ">
+      <span style="
+        font-family:var(--serif);font-size:clamp(140px,28vw,280px);
+        font-weight:400;color:var(--ink);line-height:1;
+        text-shadow:0 0 120px color-mix(in srgb,var(--green) 50%,transparent);
+      ">42</span>
+    </div>
+
     <footer>
       <span>© 2026 Alexis Honnorat</span>
       <span id="footerMode">RH · FR · Light</span>
@@ -1353,6 +1365,12 @@ stack: ${project.tags.join(" · ")}`;
       if (cmd === "cv" || cmd === "resume") {
         window.open("CV_ALEXIS_HONNORAT.pdf", "_blank");
         return print(state.lang === "fr" ? "Ouverture du CV." : "Opening resume.");
+      }
+      if (cmd === "42") {
+        const ov = document.getElementById("overlay-42");
+        ov.style.opacity = "1";
+        setTimeout(() => { ov.style.opacity = "0"; }, 2200);
+        return;
       }
       if (cmd === "lang fr" || cmd === "fr") return setMode("lang", "fr", "terminal");
       if (cmd === "lang en" || cmd === "en") return setMode("lang", "en", "terminal");
